@@ -10,6 +10,9 @@ class MyDonationsPage extends StatefulWidget {
 class _MyDonationsPageState extends State<MyDonationsPage> {
   @override
   Widget build(BuildContext context) {
-    return Center(child: Text("My Donations Page"));
+    return Scaffold(
+      appBar: AppBar(title: Text("My Donations")),
+      body: Center(child: Text("My Donations Page")),
+    );
   }
 }
