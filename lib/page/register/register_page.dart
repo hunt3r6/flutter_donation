@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_donation/core/widget/action_button.dart';
 import 'package:flutter_donation/core/widget/auth_text_field.dart';
 import 'package:flutter_donation/core/widget/form_text_field.dart';
+import 'package:go_router/go_router.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -21,7 +22,7 @@ class _RegisterPageState extends State<RegisterPage> {
         surfaceTintColor: Colors.white,
         leading: IconButton(
           onPressed: () {
-            Navigator.pop(context);
+            context.pop();
           },
           icon: Icon(Icons.arrow_back_ios_new),
         ),
@@ -50,7 +51,6 @@ class _RegisterPageState extends State<RegisterPage> {
                     return null;
                   },
                 ),
-
                 AuthTextField(
                   hintText: 'Alamat Email',
                   prefixIcon: CupertinoIcons.mail,
@@ -105,7 +105,9 @@ class _RegisterPageState extends State<RegisterPage> {
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
                     TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        context.pop();
+                      },
                       child: Text(
                         'Masuk',
                         style: TextStyle(fontWeight: FontWeight.bold),

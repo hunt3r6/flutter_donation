@@ -1,3 +1,4 @@
+import 'package:flutter_donation/core/animation/custom_fade_page.dart';
 import 'package:flutter_donation/page/dashboard/account_page.dart';
 import 'package:flutter_donation/page/dashboard/dashboard_page.dart';
 import 'package:flutter_donation/page/dashboard/donation_list_page.dart';
@@ -16,40 +17,44 @@ class AppRouter {
         routes: [
           GoRoute(
             path: '/dashboard/home',
-            builder: (_, __) {
-              return HomePage();
-            },
+            pageBuilder:
+                (context, state) =>
+                    CustomFadePage(child: HomePage(), key: state.pageKey),
           ),
           GoRoute(
             path: '/dashboard/donation_list',
-            builder: (context, state) {
-              return DonationListPage();
-            },
+            pageBuilder:
+                (context, state) => CustomFadePage(
+                  child: DonationListPage(),
+                  key: state.pageKey,
+                ),
           ),
           GoRoute(
             path: '/dashboard/my_donations',
-            builder: (context, state) {
-              return MyDonationsPage();
-            },
+            pageBuilder:
+                (context, state) => CustomFadePage(
+                  child: MyDonationsPage(),
+                  key: state.pageKey,
+                ),
           ),
           GoRoute(
             path: '/dashboard/account',
-            builder: (context, state) {
-              return AccountPage();
-            },
+            pageBuilder:
+                (context, state) =>
+                    CustomFadePage(child: AccountPage(), key: state.pageKey),
           ),
         ],
       ),
       GoRoute(
         path: '/login',
-        builder: (_, __) {
-          return LoginPage();
+        pageBuilder: (context, state) {
+          return CustomFadePage(child: LoginPage(), key: state.pageKey);
         },
       ),
       GoRoute(
         path: '/register',
-        builder: (_, __) {
-          return RegisterPage();
+        pageBuilder: (context, state) {
+          return CustomFadePage(child: RegisterPage(), key: state.pageKey);
         },
       ),
     ],

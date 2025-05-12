@@ -1,6 +1,8 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_donation/core/widget/fund_progress_bar.dart';
+import 'package:flutter_donation/core/widget/search_text_field.dart';
 import 'package:go_router/go_router.dart';
 
 class HomePage extends StatefulWidget {
@@ -12,15 +14,16 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   String? selectedCategory;
-
+  TextEditingController searchController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      child: Column(
-        children: [
-          Container(
-            color: Colors.lightBlue.shade100,
-            child: SafeArea(
+      physics: BouncingScrollPhysics(),
+      child: SafeArea(
+        child: Column(
+          children: [
+            Container(
+              color: Colors.lightBlue.shade100,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -56,75 +59,45 @@ class _HomePageState extends State<HomePage> {
                       ],
                     ),
                   ),
-                  Container(
-                    margin: const EdgeInsets.only(
-                      bottom: 16,
-                      left: 16,
-                      right: 16,
-                    ),
-                    padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.4),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Row(
-                      children: [
-                        Icon(CupertinoIcons.money_dollar_circle),
-                        const SizedBox(width: 8),
-                        Text(
-                          'Rp. 2.500.000',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                          ),
-                        ),
-                        const SizedBox(width: 4),
-                        Text('Total Donasi'),
-                      ],
-                    ),
+                  SearchTextField(
+                    controller: searchController,
+                    hintText: 'Cari yang ingin kamu bantu',
+                    onFieldSubmitted: (value) {
+                      if (value.isNotEmpty) {
+                        context.push('/search?query=$value').then((value) {
+                          searchController.clear();
+                        });
+                      }
+                    },
                   ),
                 ],
               ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: TextFormField(
-              decoration: InputDecoration(
-                hintText: 'Cari donasi',
-                prefixIcon: Icon(CupertinoIcons.search),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(15),
-                  borderSide: BorderSide.none,
-                ),
-                filled: true,
-                fillColor: Colors.white,
+
+            _buildHeader('Kategori', () {
+              context.push('/kategori');
+            }),
+            SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: [
+                  _buildCategoryButton('All'),
+                  _buildCategoryButton('Masjid'),
+                  _buildCategoryButton('Pendidikan'),
+                  _buildCategoryButton('Kesehatan'),
+                  _buildCategoryButton('Bencana'),
+                  _buildCategoryButton('Yatim'),
+                ],
               ),
             ),
-          ),
-          _buildHeader('Kategori', () {
-            context.push('/kategori');
-          }),
-          SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children: [
-                _buildCategoryButton('All'),
-                _buildCategoryButton('Masjid'),
-                _buildCategoryButton('Pendidikan'),
-                _buildCategoryButton('Kesehatan'),
-                _buildCategoryButton('Bencana'),
-                _buildCategoryButton('Yatim'),
-              ],
-            ),
-          ),
-          _buildHeader('Donasi Mendesak', () {
-            context.push('/donasi-mendesak');
-          }),
-          _buildDonationCard(),
-          _buildDonationCard(),
-        ],
+            _buildHeader('Donasi Mendesak', () {
+              context.push('/dashboard/donation_list');
+            }),
+            _buildDonationCard(),
+            _buildDonationCard(),
+          ],
+        ),
       ),
     );
   }
@@ -147,8 +120,13 @@ class _HomePageState extends State<HomePage> {
             child: SizedBox(
               height: 180,
               width: double.infinity,
-              child: Image.network(
-                'https://donasi.appdev.my.id/storage/campaigns/d07qNDLrVfHmHeip1jNfaX0T1UntkX59NHHpAUpQ.jpg',
+              child: CachedNetworkImage(
+                imageUrl:
+                    'https://donasi.appdev.my.id/storage/campaigns/d07qNDLrVfHmHeip1jNfaX0T1UntkX59NHHpAUpQ.jpg',
+                placeholder:
+                    (context, url) =>
+                        Center(child: CircularProgressIndicator()),
+                errorWidget: (context, url, error) => Icon(Icons.error),
                 fit: BoxFit.cover,
               ),
             ),

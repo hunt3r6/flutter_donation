@@ -45,9 +45,20 @@ class _DashboardPageState extends State<DashboardPage> {
   ];
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final location = GoRouterState.of(context).uri.toString();
+    final index = tabs.indexWhere((tab) => location.startsWith(tab));
+    setState(() {
+      currentIndex = index == -1 ? 0 : index;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: widget.child,
+      extendBody: true,
       bottomNavigationBar: _buildBottomNavigationBar(),
     );
   }
