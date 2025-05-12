@@ -1,8 +1,10 @@
-import 'package:flutter_donation/page/account_page.dart';
-import 'package:flutter_donation/page/dashboard_page.dart';
-import 'package:flutter_donation/page/donation_list_page.dart';
-import 'package:flutter_donation/page/home_page.dart';
-import 'package:flutter_donation/page/my_donations_page.dart';
+import 'package:flutter_donation/page/dashboard/account_page.dart';
+import 'package:flutter_donation/page/dashboard/dashboard_page.dart';
+import 'package:flutter_donation/page/dashboard/donation_list_page.dart';
+import 'package:flutter_donation/page/dashboard/home_page.dart';
+import 'package:flutter_donation/page/dashboard/my_donations_page.dart';
+import 'package:flutter_donation/page/login/login_page.dart';
+import 'package:flutter_donation/page/register/register_page.dart';
 import 'package:go_router/go_router.dart';
 
 class AppRouter {
@@ -37,6 +39,18 @@ class AppRouter {
             },
           ),
         ],
+      ),
+      GoRoute(
+        path: '/login',
+        builder: (_, __) {
+          return LoginPage();
+        },
+      ),
+      GoRoute(
+        path: '/register',
+        builder: (_, __) {
+          return RegisterPage();
+        },
       ),
     ],
   );

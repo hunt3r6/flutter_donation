@@ -1,4 +1,5 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -20,25 +21,25 @@ class _DashboardPageState extends State<DashboardPage> {
 
   int currentIndex = 0;
 
-  final List<NavigationDestination> _appBarDestinations = const [
+  final List<NavigationDestination> _appBarDestinations = [
     NavigationDestination(
-      selectedIcon: Icon(Icons.home_outlined, color: Colors.blue),
-      icon: Icon(Icons.home_outlined),
+      selectedIcon: Icon(CupertinoIcons.house, color: Colors.blue),
+      icon: Icon(CupertinoIcons.house),
       label: 'Home',
     ),
     NavigationDestination(
-      selectedIcon: Icon(Icons.list_outlined, color: Colors.blue),
-      icon: Icon(Icons.list_outlined),
-      label: 'Donation List',
+      selectedIcon: Icon(CupertinoIcons.list_bullet, color: Colors.blue),
+      icon: Icon(CupertinoIcons.list_bullet),
+      label: 'List',
     ),
     NavigationDestination(
-      selectedIcon: Icon(Icons.volunteer_activism_outlined, color: Colors.blue),
-      icon: Icon(Icons.volunteer_activism_outlined),
-      label: 'My Donations',
+      selectedIcon: Icon(CupertinoIcons.gift, color: Colors.blue),
+      icon: Icon(CupertinoIcons.gift),
+      label: 'Donations',
     ),
     NavigationDestination(
-      selectedIcon: Icon(Icons.person_2_outlined, color: Colors.blue),
-      icon: Icon(Icons.person_2_outlined),
+      selectedIcon: Icon(CupertinoIcons.person, color: Colors.blue),
+      icon: Icon(CupertinoIcons.person),
       label: 'Account',
     ),
   ];
@@ -53,7 +54,7 @@ class _DashboardPageState extends State<DashboardPage> {
 
   Widget _buildBottomNavigationBar() {
     return Container(
-      margin: const EdgeInsets.only(bottom: 24.0, left: 16.0, right: 16.0),
+      margin: const EdgeInsets.only(bottom: 24.0, left: 14.0, right: 14.0),
       decoration: BoxDecoration(
         boxShadow: [
           BoxShadow(

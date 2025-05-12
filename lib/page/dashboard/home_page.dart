@@ -1,5 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_donation/widget/fund_progress_bar.dart';
+import 'package:flutter_donation/core/widget/fund_progress_bar.dart';
+import 'package:go_router/go_router.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -9,6 +11,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  String? selectedCategory;
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -44,7 +48,9 @@ class _HomePageState extends State<HomePage> {
                           ),
                         ),
                         IconButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            context.push('/login');
+                          },
                           icon: Icon(Icons.login_rounded),
                         ),
                       ],
@@ -63,7 +69,7 @@ class _HomePageState extends State<HomePage> {
                     ),
                     child: Row(
                       children: [
-                        Icon(Icons.monetization_on_outlined),
+                        Icon(CupertinoIcons.money_dollar_circle),
                         const SizedBox(width: 8),
                         Text(
                           'Rp. 2.500.000',
@@ -86,9 +92,9 @@ class _HomePageState extends State<HomePage> {
             child: TextFormField(
               decoration: InputDecoration(
                 hintText: 'Cari donasi',
-                prefixIcon: Icon(Icons.search),
+                prefixIcon: Icon(CupertinoIcons.search),
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(20),
+                  borderRadius: BorderRadius.circular(15),
                   borderSide: BorderSide.none,
                 ),
                 filled: true,
@@ -96,20 +102,27 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
           ),
-          Padding(
+          _buildHeader('Kategori', () {
+            context.push('/kategori');
+          }),
+          SingleChildScrollView(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            scrollDirection: Axis.horizontal,
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  'Donasi Mendesak',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                ),
-                TextButton(onPressed: () {}, child: Text('Lihat Semua')),
+                _buildCategoryButton('All'),
+                _buildCategoryButton('Masjid'),
+                _buildCategoryButton('Pendidikan'),
+                _buildCategoryButton('Kesehatan'),
+                _buildCategoryButton('Bencana'),
+                _buildCategoryButton('Yatim'),
               ],
             ),
           ),
-
+          _buildHeader('Donasi Mendesak', () {
+            context.push('/donasi-mendesak');
+          }),
+          _buildDonationCard(),
           _buildDonationCard(),
         ],
       ),
@@ -119,6 +132,8 @@ class _HomePageState extends State<HomePage> {
   Widget _buildDonationCard() {
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+      elevation: 0.2,
+      color: Colors.white,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       child: Column(
         spacing: 8,
@@ -159,8 +174,8 @@ class _HomePageState extends State<HomePage> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                _textIcon(Icons.group_outlined, '200 Donatur'),
-                _textIcon(Icons.schedule, '164 Hari Lagi'),
+                _textIcon(CupertinoIcons.person_2, '200 Donatur'),
+                _textIcon(CupertinoIcons.time, '164 Hari Lagi'),
               ],
             ),
           ),
@@ -172,5 +187,51 @@ class _HomePageState extends State<HomePage> {
 
   Widget _textIcon(IconData icon, String text) {
     return Row(spacing: 8, children: [Icon(icon), Text(text)]);
+  }
+
+  Widget _buildCategoryButton(String label) {
+    final isSelected = selectedCategory == label;
+    return Padding(
+      padding: const EdgeInsets.only(right: 12.0),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(20),
+        onTap: () {
+          setState(() {
+            selectedCategory = label;
+          });
+        },
+        child: Container(
+          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          decoration: BoxDecoration(
+            color: isSelected ? Colors.blue : Colors.white,
+            borderRadius: BorderRadius.circular(15),
+          ),
+          child: Text(
+            label,
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+              color: isSelected ? Colors.white : Colors.black54,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildHeader(String title, VoidCallback onPressed) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            title,
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+          ),
+          TextButton(onPressed: onPressed, child: Text('Lihat Semua')),
+        ],
+      ),
+    );
   }
 }
