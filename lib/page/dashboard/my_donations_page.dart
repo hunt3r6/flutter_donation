@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_donation/core/widget/custom_app_bar.dart';
 
 class MyDonationsPage extends StatefulWidget {
   const MyDonationsPage({super.key});
@@ -12,7 +13,7 @@ class _MyDonationsPageState extends State<MyDonationsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Riwayat Donasi Saya")),
+      appBar: CustomAppBar(title: 'Riwayat Donasi Saya', centerTitle: false),
       body: Column(children: [_buildDonationCard(), _buildDonationCard()]),
     );
   }

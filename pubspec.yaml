@@ -20,6 +20,7 @@ dependencies:
   webview_flutter: ^4.11.0
   freezed_annotation: ^3.0.0
   cached_network_image: ^3.4.1
+  carousel_slider: ^5.0.0
   
 
 dev_dependencies:

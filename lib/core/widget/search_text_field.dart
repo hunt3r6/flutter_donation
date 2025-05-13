@@ -27,7 +27,7 @@ class SearchTextField extends StatelessWidget {
             borderSide: BorderSide.none,
           ),
           filled: true,
-          fillColor: Colors.white,
+          fillColor: Colors.blue.shade50,
         ),
       ),
     );

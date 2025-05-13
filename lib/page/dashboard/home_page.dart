@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_donation/core/widget/fund_progress_bar.dart';
@@ -15,6 +16,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   String? selectedCategory;
   TextEditingController searchController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -73,10 +75,7 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
             ),
-
-            _buildHeader('Kategori', () {
-              context.push('/kategori');
-            }),
+            _buildCarousel(),
             SingleChildScrollView(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               scrollDirection: Axis.horizontal,
@@ -91,9 +90,7 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
             ),
-            _buildHeader('Donasi Mendesak', () {
-              context.push('/dashboard/donation_list');
-            }),
+            SizedBox(height: 16.0),
             _buildDonationCard(),
             _buildDonationCard(),
           ],
@@ -197,19 +194,35 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _buildHeader(String title, VoidCallback onPressed) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            title,
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-          ),
-          TextButton(onPressed: onPressed, child: Text('Lihat Semua')),
-        ],
-      ),
+  Widget _buildCarousel() {
+    final List<String> imgList = [
+      'https://donasi.appdev.my.id/storage/sliders/oj7V6eBuELKvqLkxenzoIAoBEyks4zz5aFg1sClf.png',
+      'https://donasi.appdev.my.id/storage/sliders/8fmbhBOOrC8SrzrMyjT2Tn3z3Kve2Q6vrV3THqyU.png',
+    ];
+
+    final List<Widget> imageSliders =
+        imgList
+            .map(
+              (item) => Padding(
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                child: SizedBox(
+                  height: 100,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                    child: Image.network(item, fit: BoxFit.cover),
+                  ),
+                ),
+              ),
+            )
+            .toList();
+
+    return Column(
+      children: [
+        CarouselSlider(
+          items: imageSliders,
+          options: CarouselOptions(enlargeCenterPage: true, autoPlay: true),
+        ),
+      ],
     );
   }
 }
