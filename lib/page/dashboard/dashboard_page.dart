@@ -21,28 +21,23 @@ class _DashboardPageState extends State<DashboardPage> {
 
   int currentIndex = 0;
 
-  final List<NavigationDestination> _appBarDestinations = [
-    NavigationDestination(
-      selectedIcon: Icon(CupertinoIcons.house, color: Colors.blue),
-      icon: Icon(CupertinoIcons.house),
-      label: 'Home',
-    ),
-    NavigationDestination(
-      selectedIcon: Icon(CupertinoIcons.list_bullet, color: Colors.blue),
-      icon: Icon(CupertinoIcons.list_bullet),
-      label: 'List',
-    ),
-    NavigationDestination(
-      selectedIcon: Icon(CupertinoIcons.gift, color: Colors.blue),
-      icon: Icon(CupertinoIcons.gift),
-      label: 'Donations',
-    ),
-    NavigationDestination(
-      selectedIcon: Icon(CupertinoIcons.person, color: Colors.blue),
-      icon: Icon(CupertinoIcons.person),
-      label: 'Account',
-    ),
-  ];
+  List<NavigationDestination> get _appBarDestinations =>
+      List.generate(tabs.length, (index) {
+        final icons = [
+          CupertinoIcons.house,
+          CupertinoIcons.list_bullet,
+          CupertinoIcons.gift,
+          CupertinoIcons.person,
+        ];
+
+        final labels = ['Home', 'List', 'Donations', 'Account'];
+
+        return NavigationDestination(
+          selectedIcon: Icon(icons[index], color: Colors.blue),
+          icon: Icon(icons[index]),
+          label: labels[index],
+        );
+      });
 
   @override
   void didChangeDependencies() {
