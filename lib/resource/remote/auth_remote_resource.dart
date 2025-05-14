@@ -46,7 +46,7 @@ class AuthRemoteResource {
       );
       return Right(response.data['message']);
     } on DioException catch (e) {
-      if (e.response?.statusCode == 422) {
+      if (e.response?.statusCode == 400) {
         return Left(e.response?.data);
       }
       return Left(e.toString());

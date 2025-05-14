@@ -1,7 +1,11 @@
+import 'dart:developer';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_donation/bloc/auth/auth_bloc.dart';
 import 'package:flutter_donation/core/widget/fund_progress_bar.dart';
 import 'package:flutter_donation/core/widget/search_text_field.dart';
 import 'package:go_router/go_router.dart';
@@ -19,6 +23,8 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final isLoggedIn = context.watch<AuthBloc>().state is Authenticated;
+    log('isLoggedIn: $isLoggedIn');
     return SingleChildScrollView(
       physics: BouncingScrollPhysics(),
       child: SafeArea(
@@ -54,9 +60,20 @@ class _HomePageState extends State<HomePage> {
                         ),
                         IconButton(
                           onPressed: () {
-                            context.push('/login');
+                            if (isLoggedIn) {
+                              context.read<AuthBloc>().add(
+                                AuthEvent.logoutRequested(),
+                              );
+                              context.push('/login');
+                            } else {
+                              context.push('/login');
+                            }
                           },
-                          icon: Icon(Icons.login_rounded),
+                          icon: Icon(
+                            isLoggedIn
+                                ? Icons.logout_rounded
+                                : Icons.login_rounded,
+                          ),
                         ),
                       ],
                     ),
@@ -104,7 +121,7 @@ class _HomePageState extends State<HomePage> {
       margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
       elevation: 0.2,
       color: Colors.white,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
       child: Column(
         spacing: 8,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -208,7 +225,7 @@ class _HomePageState extends State<HomePage> {
                 child: SizedBox(
                   height: 100,
                   child: ClipRRect(
-                    borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                    borderRadius: BorderRadius.all(Radius.circular(15)),
                     child: Image.network(item, fit: BoxFit.cover),
                   ),
                 ),

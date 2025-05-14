@@ -23,12 +23,15 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   ) async {
     emit(AuthState.loading());
     final result = await authRemoteResource.login(event.email, event.password);
-    result.fold((message) => emit(AuthState.failure(error: message)), (
-      response,
-    ) async {
-      await AuthLocalResource.saveToken(response.token ?? '');
-      emit(AuthState.authenticated());
-    });
+    await result.fold(
+      (error) async {
+        emit(AuthState.failure(error: error));
+      },
+      (response) async {
+        await AuthLocalResource.saveToken(response.token ?? '');
+        emit(AuthState.authenticated());
+      },
+    );
   }
 
   /// Handle register request event.
@@ -43,20 +46,21 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       event.password,
       event.passwordConfirmation,
     );
-    result.fold(
-      (error) {
+    await result.fold(
+      (error) async {
         if (error is Map<String, dynamic>) {
           emit(AuthState.registerFailure(error: error));
         } else {
           emit(AuthState.failure(error: error.toString()));
         }
       },
-      (message) {
+      (message) async {
         emit(AuthState.registerSuccess(message: message));
       },
     );
   }
 
+  /// Handle check login status event.
   Future<void> _onCheckLoginStatus(
     CheckLoginStatus event,
     Emitter<AuthState> emit,
@@ -69,6 +73,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     }
   }
 
+  /// Handle logout request event.
   Future<void> _onLogoutRequested(
     LogoutRequested event,
     Emitter<AuthState> emit,

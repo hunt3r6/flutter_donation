@@ -7,7 +7,7 @@ class AuthState with _$AuthState {
   const factory AuthState.authenticated() = Authenticated;
   const factory AuthState.unauthenticated() = Unauthenticated;
   const factory AuthState.registerSuccess({required String message}) =
-      _RegisterSuccess;
+      RegisterSuccess;
   const factory AuthState.failure({required String error}) = Failure;
   const factory AuthState.registerFailure({
     required Map<String, dynamic> error,

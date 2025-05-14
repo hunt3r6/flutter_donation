@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 
 class FormTextField extends StatefulWidget {
@@ -6,6 +7,10 @@ class FormTextField extends StatefulWidget {
   final TextInputType keyboardType;
   final String? Function(String?)? validator;
   final TextEditingController? controller;
+  final FocusNode? focusNode;
+  final TextInputAction? textInputAction;
+  final ValueChanged<String>? onFieldSubmitted;
+
   const FormTextField({
     super.key,
     required this.hintText,
@@ -13,6 +18,9 @@ class FormTextField extends StatefulWidget {
     this.keyboardType = TextInputType.text,
     this.validator,
     this.controller,
+    this.focusNode,
+    this.textInputAction,
+    this.onFieldSubmitted,
   });
 
   @override
@@ -36,8 +44,11 @@ class _FormTextFieldState extends State<FormTextField> {
       ),
       child: TextFormField(
         controller: widget.controller,
+        focusNode: widget.focusNode,
+        textInputAction: widget.textInputAction,
         keyboardType: widget.keyboardType,
         validator: widget.validator,
+        onFieldSubmitted: widget.onFieldSubmitted,
         decoration: InputDecoration(
           hintText: widget.hintText,
           prefixIcon: Icon(widget.prefixIcon),

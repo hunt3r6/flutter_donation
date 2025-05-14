@@ -8,6 +8,9 @@ class AuthTextField extends StatefulWidget {
   final TextInputType keyboardType;
   final String? Function(String?)? validator;
   final TextEditingController? controller;
+  final FocusNode? focusNode;
+  final TextInputAction? textInputAction;
+  final ValueChanged<String>? onFieldSubmitted;
 
   const AuthTextField({
     super.key,
@@ -17,6 +20,9 @@ class AuthTextField extends StatefulWidget {
     this.keyboardType = TextInputType.text,
     this.validator,
     this.controller,
+    this.focusNode,
+    this.textInputAction,
+    this.onFieldSubmitted,
   });
 
   @override
@@ -48,8 +54,11 @@ class _AuthTextFieldState extends State<AuthTextField> {
       ),
       child: TextFormField(
         controller: widget.controller,
+        focusNode: widget.focusNode,
+        textInputAction: widget.textInputAction,
         obscureText: _obscure,
         keyboardType: widget.keyboardType,
+        onFieldSubmitted: widget.onFieldSubmitted,
         validator: widget.validator,
         decoration: InputDecoration(
           hintText: widget.hintText,
@@ -67,6 +76,21 @@ class _AuthTextFieldState extends State<AuthTextField> {
           focusedBorder: const OutlineInputBorder(
             borderRadius: BorderRadius.all(Radius.circular(15)),
             borderSide: BorderSide(color: Colors.blue, width: 1),
+          ),
+
+          errorBorder: const OutlineInputBorder(
+            borderRadius: BorderRadius.all(Radius.circular(15)),
+            borderSide: BorderSide(
+              color: Colors.red,
+              width: 1,
+            ), // Border saat error
+          ),
+          focusedErrorBorder: const OutlineInputBorder(
+            borderRadius: BorderRadius.all(Radius.circular(15)),
+            borderSide: BorderSide(
+              color: Colors.redAccent,
+              width: 1,
+            ), // Fokus + error
           ),
           suffixIcon:
               widget.obscureText

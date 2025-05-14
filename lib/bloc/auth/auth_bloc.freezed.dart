@@ -407,8 +407,8 @@ String toString() {
 /// @nodoc
 
 
-class _RegisterSuccess implements AuthState {
-  const _RegisterSuccess({required this.message});
+class RegisterSuccess implements AuthState {
+  const RegisterSuccess({required this.message});
   
 
  final  String message;
@@ -417,13 +417,13 @@ class _RegisterSuccess implements AuthState {
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
-_$RegisterSuccessCopyWith<_RegisterSuccess> get copyWith => __$RegisterSuccessCopyWithImpl<_RegisterSuccess>(this, _$identity);
+$RegisterSuccessCopyWith<RegisterSuccess> get copyWith => _$RegisterSuccessCopyWithImpl<RegisterSuccess>(this, _$identity);
 
 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _RegisterSuccess&&(identical(other.message, message) || other.message == message));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is RegisterSuccess&&(identical(other.message, message) || other.message == message));
 }
 
 
@@ -439,8 +439,8 @@ String toString() {
 }
 
 /// @nodoc
-abstract mixin class _$RegisterSuccessCopyWith<$Res> implements $AuthStateCopyWith<$Res> {
-  factory _$RegisterSuccessCopyWith(_RegisterSuccess value, $Res Function(_RegisterSuccess) _then) = __$RegisterSuccessCopyWithImpl;
+abstract mixin class $RegisterSuccessCopyWith<$Res> implements $AuthStateCopyWith<$Res> {
+  factory $RegisterSuccessCopyWith(RegisterSuccess value, $Res Function(RegisterSuccess) _then) = _$RegisterSuccessCopyWithImpl;
 @useResult
 $Res call({
  String message
@@ -451,17 +451,17 @@ $Res call({
 
 }
 /// @nodoc
-class __$RegisterSuccessCopyWithImpl<$Res>
-    implements _$RegisterSuccessCopyWith<$Res> {
-  __$RegisterSuccessCopyWithImpl(this._self, this._then);
+class _$RegisterSuccessCopyWithImpl<$Res>
+    implements $RegisterSuccessCopyWith<$Res> {
+  _$RegisterSuccessCopyWithImpl(this._self, this._then);
 
-  final _RegisterSuccess _self;
-  final $Res Function(_RegisterSuccess) _then;
+  final RegisterSuccess _self;
+  final $Res Function(RegisterSuccess) _then;
 
 /// Create a copy of AuthState
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') $Res call({Object? message = null,}) {
-  return _then(_RegisterSuccess(
+  return _then(RegisterSuccess(
 message: null == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
 as String,
   ));
