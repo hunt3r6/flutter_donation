@@ -4,9 +4,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_donation/bloc/auth/auth_bloc.dart';
-import 'package:flutter_donation/bloc/cubit/sliders_cubit.dart';
+import 'package:flutter_donation/bloc/category/category_cubit.dart';
+import 'package:flutter_donation/bloc/slider/sliders_cubit.dart';
 import 'package:flutter_donation/core/widget/fund_progress_bar.dart';
 import 'package:flutter_donation/core/widget/search_text_field.dart';
+import 'package:flutter_donation/resource/model/category_model.dart';
 import 'package:flutter_donation/resource/model/slider_model.dart';
 import 'package:go_router/go_router.dart';
 
@@ -24,6 +26,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     context.read<SlidersCubit>().getSliders();
+    context.read<CategoryCubit>().getCategories();
     super.initState();
   }
 
@@ -100,28 +103,57 @@ class _HomePageState extends State<HomePage> {
             BlocBuilder<SlidersCubit, SlidersState>(
               builder: (context, state) {
                 if (state is SliderLoading) {
-                  return Center(child: CircularProgressIndicator());
+                  return Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Center(child: CircularProgressIndicator()),
+                  );
                 } else if (state is SliderError) {
-                  return Center(child: Text('Error: ${state.message}'));
+                  return Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Center(child: Text('Error: ${state.message}')),
+                  );
                 } else if (state is SliderLoaded) {
                   return _buildCarousel(state.sliders);
                 }
                 return Center(child: Text('No Sliders Available'));
               },
             ),
-            SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                children: [
-                  _buildCategoryButton('All'),
-                  _buildCategoryButton('Masjid'),
-                  _buildCategoryButton('Pendidikan'),
-                  _buildCategoryButton('Kesehatan'),
-                  _buildCategoryButton('Bencana'),
-                  _buildCategoryButton('Yatim'),
-                ],
-              ),
+
+            BlocBuilder<CategoryCubit, CategoryState>(
+              builder: (context, state) {
+                if (state is CategoryLoading) {
+                  return Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Center(child: CircularProgressIndicator()),
+                  );
+                } else if (state is CategoryError) {
+                  return Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Center(child: Text('Error: ${state.message}')),
+                  );
+                } else if (state is CategoryLoaded) {
+                  List<CategoryModel> categories = state.categories;
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: SizedBox(
+                      height: 45,
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: categories.length + 1,
+                        itemBuilder: (contex, index) {
+                          if (index == 0) {
+                            return _buildCategoryButton('Semua');
+                          }
+                          return _buildCategoryButton(
+                            categories[index - 1].name ?? '',
+                          );
+                        },
+                      ),
+                    ),
+                  );
+                }
+                return Center(child: Text('No Categories Available'));
+              },
             ),
             SizedBox(height: 16.0),
             _buildDonationCard(),
@@ -200,7 +232,7 @@ class _HomePageState extends State<HomePage> {
   Widget _buildCategoryButton(String label) {
     final isSelected = selectedCategory == label;
     return Padding(
-      padding: const EdgeInsets.only(right: 12.0),
+      padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: InkWell(
         borderRadius: BorderRadius.circular(20),
         onTap: () {
@@ -209,6 +241,7 @@ class _HomePageState extends State<HomePage> {
           });
         },
         child: Container(
+          alignment: Alignment.center,
           padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           decoration: BoxDecoration(
             color: isSelected ? Colors.blue : Colors.white,

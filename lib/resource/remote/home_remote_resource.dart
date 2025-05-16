@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:either_dart/either.dart';
+import 'package:flutter_donation/resource/model/category_model.dart';
 import 'package:flutter_donation/resource/model/slider_model.dart';
 
 class HomeRemoteResource {
@@ -12,6 +13,18 @@ class HomeRemoteResource {
       final sliders = response.data['data'];
       return Right(
         (sliders as List).map((e) => SliderModel.fromMap(e)).toList(),
+      );
+    } on DioException catch (e) {
+      return Left(e.toString());
+    }
+  }
+
+  Future<Either<String, List<CategoryModel>>> getCategories() async {
+    try {
+      final response = await _dio.get('category');
+      final categories = response.data['data']['data'];
+      return Right(
+        (categories as List).map((e) => CategoryModel.fromMap(e)).toList(),
       );
     } on DioException catch (e) {
       return Left(e.toString());
