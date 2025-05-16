@@ -1,7 +1,9 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_donation/bloc/cubit/sliders_cubit.dart';
 import 'package:flutter_donation/core/util/auth_interceptor.dart';
+import 'package:flutter_donation/resource/remote/home_remote_resource.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'package:flutter_donation/app_router.dart';
@@ -22,6 +24,7 @@ void main() {
 
   // Add any additional interceptors or configurations to the Dio instance here
   final authRemoteResource = AuthRemoteResource(dio);
+  final homeRemoteResource = HomeRemoteResource(dio);
 
   final authBloc = AuthBloc(authRemoteResource)
     ..add(AuthEvent.checkLoginStatus());
@@ -31,18 +34,33 @@ void main() {
   //Add the interceptor to the Dio instance
   dio.interceptors.add(AuthInterceptor(authBloc));
 
-  runApp(MyApp(appRouter: appRouter, authBloc: authBloc));
+  runApp(
+    MyApp(
+      appRouter: appRouter,
+      authBloc: authBloc,
+      homeRemoteResource: homeRemoteResource,
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
   final AppRouter appRouter;
   final AuthBloc authBloc;
-  const MyApp({super.key, required this.appRouter, required this.authBloc});
+  final HomeRemoteResource homeRemoteResource;
+  const MyApp({
+    super.key,
+    required this.appRouter,
+    required this.authBloc,
+    required this.homeRemoteResource,
+  });
 
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
-      providers: [BlocProvider.value(value: authBloc)],
+      providers: [
+        BlocProvider.value(value: authBloc),
+        BlocProvider(create: (_) => SlidersCubit(homeRemoteResource)),
+      ],
       child: MaterialApp.router(
         title: 'Flutter Donation',
         theme: ThemeData(

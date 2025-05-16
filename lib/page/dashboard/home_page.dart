@@ -1,13 +1,13 @@
-import 'dart:developer';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_donation/bloc/auth/auth_bloc.dart';
+import 'package:flutter_donation/bloc/cubit/sliders_cubit.dart';
 import 'package:flutter_donation/core/widget/fund_progress_bar.dart';
 import 'package:flutter_donation/core/widget/search_text_field.dart';
+import 'package:flutter_donation/resource/model/slider_model.dart';
 import 'package:go_router/go_router.dart';
 
 class HomePage extends StatefulWidget {
@@ -22,9 +22,14 @@ class _HomePageState extends State<HomePage> {
   TextEditingController searchController = TextEditingController();
 
   @override
+  void initState() {
+    context.read<SlidersCubit>().getSliders();
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final isLoggedIn = context.watch<AuthBloc>().state is Authenticated;
-    log('isLoggedIn: $isLoggedIn');
     return SingleChildScrollView(
       physics: BouncingScrollPhysics(),
       child: SafeArea(
@@ -92,7 +97,18 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
             ),
-            _buildCarousel(),
+            BlocBuilder<SlidersCubit, SlidersState>(
+              builder: (context, state) {
+                if (state is SliderLoading) {
+                  return Center(child: CircularProgressIndicator());
+                } else if (state is SliderError) {
+                  return Center(child: Text('Error: ${state.message}'));
+                } else if (state is SliderLoaded) {
+                  return _buildCarousel(state.sliders);
+                }
+                return Center(child: Text('No Sliders Available'));
+              },
+            ),
             SingleChildScrollView(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               scrollDirection: Axis.horizontal,
@@ -211,14 +227,9 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _buildCarousel() {
-    final List<String> imgList = [
-      'https://donasi.appdev.my.id/storage/sliders/oj7V6eBuELKvqLkxenzoIAoBEyks4zz5aFg1sClf.png',
-      'https://donasi.appdev.my.id/storage/sliders/8fmbhBOOrC8SrzrMyjT2Tn3z3Kve2Q6vrV3THqyU.png',
-    ];
-
+  Widget _buildCarousel(List<SliderModel> sliders) {
     final List<Widget> imageSliders =
-        imgList
+        sliders
             .map(
               (item) => Padding(
                 padding: const EdgeInsets.symmetric(vertical: 16),
@@ -226,7 +237,7 @@ class _HomePageState extends State<HomePage> {
                   height: 100,
                   child: ClipRRect(
                     borderRadius: BorderRadius.all(Radius.circular(15)),
-                    child: Image.network(item, fit: BoxFit.cover),
+                    child: Image.network(item.image ?? '', fit: BoxFit.cover),
                   ),
                 ),
               ),

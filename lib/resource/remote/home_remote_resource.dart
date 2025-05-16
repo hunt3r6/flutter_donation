@@ -2,15 +2,16 @@ import 'package:dio/dio.dart';
 import 'package:either_dart/either.dart';
 import 'package:flutter_donation/resource/model/slider_model.dart';
 
-class SliderRemoteResource {
+class HomeRemoteResource {
   final Dio _dio;
 
-  SliderRemoteResource(this._dio);
+  HomeRemoteResource(this._dio);
   Future<Either<String, List<SliderModel>>> getSliders() async {
     try {
-      final response = await _dio.get('sliders');
+      final response = await _dio.get('slider');
+      final sliders = response.data['data'];
       return Right(
-        (response.data as List).map((e) => SliderModel.fromMap(e)).toList(),
+        (sliders as List).map((e) => SliderModel.fromMap(e)).toList(),
       );
     } on DioException catch (e) {
       return Left(e.toString());
