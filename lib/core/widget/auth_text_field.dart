@@ -11,6 +11,7 @@ class AuthTextField extends StatefulWidget {
   final FocusNode? focusNode;
   final TextInputAction? textInputAction;
   final ValueChanged<String>? onFieldSubmitted;
+  final String? errorText;
 
   const AuthTextField({
     super.key,
@@ -23,6 +24,7 @@ class AuthTextField extends StatefulWidget {
     this.focusNode,
     this.textInputAction,
     this.onFieldSubmitted,
+    this.errorText,
   });
 
   @override
@@ -61,6 +63,7 @@ class _AuthTextFieldState extends State<AuthTextField> {
         onFieldSubmitted: widget.onFieldSubmitted,
         validator: widget.validator,
         decoration: InputDecoration(
+          errorText: widget.errorText,
           hintText: widget.hintText,
           prefixIcon: Icon(widget.prefixIcon),
           fillColor: Colors.white,

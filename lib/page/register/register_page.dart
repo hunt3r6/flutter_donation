@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_donation/bloc/auth/auth_bloc.dart';
+import 'package:flutter_donation/core/util/error_handler.dart';
 import 'package:flutter_donation/core/widget/action_button.dart';
 import 'package:flutter_donation/core/widget/auth_text_field.dart';
 import 'package:flutter_donation/core/widget/form_text_field.dart';
@@ -26,6 +27,8 @@ class _RegisterPageState extends State<RegisterPage> {
   final _emailFocus = FocusNode();
   final _passwordFocus = FocusNode();
   final _confirmPasswordFocus = FocusNode();
+
+  Map<String, String> _errorMessages = {};
 
   @override
   void dispose() {
@@ -79,23 +82,7 @@ class _RegisterPageState extends State<RegisterPage> {
               break;
 
             case RegisterFailure(error: Map<String, dynamic> error):
-              toastification.show(
-                context: context,
-                type: ToastificationType.error,
-                style: ToastificationStyle.fillColored,
-                title: Text(error['message']),
-                description: Text('Cek kembali email dan password anda'),
-                alignment: Alignment.center,
-                autoCloseDuration: const Duration(seconds: 3),
-                animationBuilder: (context, animation, alignment, child) {
-                  return FadeTransition(opacity: animation, child: child);
-                },
-                borderRadius: BorderRadius.circular(15.0),
-                showProgressBar: true,
-                closeOnClick: false,
-                pauseOnHover: false,
-                showIcon: false,
-              );
+              _errorMessages = ErrorHandler.parseErrors(error);
               break;
           }
         },
@@ -130,6 +117,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   ),
                   SizedBox(height: 16),
                   FormTextField(
+                    controller: _fullNameController,
                     hintText: 'Nama Lengkap',
                     focusNode: _fullNameFocus,
                     textInputAction: TextInputAction.next,
@@ -145,6 +133,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     },
                   ),
                   AuthTextField(
+                    controller: _emailController,
                     hintText: 'Alamat Email',
                     prefixIcon: CupertinoIcons.mail,
                     keyboardType: TextInputType.emailAddress,
@@ -153,6 +142,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     onFieldSubmitted: (value) {
                       FocusScope.of(context).requestFocus(_passwordFocus);
                     },
+                    errorText: _errorMessages['email'],
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Masukkan Alamat Email';
@@ -166,6 +156,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     },
                   ),
                   AuthTextField(
+                    controller: _passwordController,
                     hintText: 'Password',
                     prefixIcon: CupertinoIcons.lock,
                     focusNode: _passwordFocus,
@@ -187,12 +178,16 @@ class _RegisterPageState extends State<RegisterPage> {
                     },
                   ),
                   AuthTextField(
+                    controller: _confirmPasswordController,
                     hintText: 'Konfirmasi Password',
                     prefixIcon: CupertinoIcons.lock,
                     focusNode: _confirmPasswordFocus,
                     textInputAction: TextInputAction.done,
                     obscureText: true,
                     validator: (value) {
+                      if (value != _passwordController.text) {
+                        return 'Password tidak sesuai';
+                      }
                       if (value == null || value.isEmpty) {
                         return 'Mohon Konfirmasi Password';
                       }
@@ -236,12 +231,13 @@ class _RegisterPageState extends State<RegisterPage> {
       final name = _fullNameController.text;
       final email = _emailController.text;
       final password = _passwordController.text;
+      final confirmPassword = _confirmPasswordController.text;
       context.read<AuthBloc>().add(
         AuthEvent.registerRequested(
           name: name,
           email: email,
           password: password,
-          passwordConfirmation: password,
+          passwordConfirmation: confirmPassword,
         ),
       );
     }

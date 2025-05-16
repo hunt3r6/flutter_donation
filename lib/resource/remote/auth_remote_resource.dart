@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dio/dio.dart';
 import 'package:either_dart/either.dart';
 import 'package:flutter_donation/resource/local/auth_local_resource.dart';
@@ -34,6 +36,7 @@ class AuthRemoteResource {
     String password,
     String passwordConfirmation,
   ) async {
+    log('Registering user: $name, $email');
     try {
       final response = await _dio.post(
         'register',
@@ -47,6 +50,7 @@ class AuthRemoteResource {
       return Right(response.data['message']);
     } on DioException catch (e) {
       if (e.response?.statusCode == 400) {
+        log(e.response?.data.toString() ?? 'Error: No data');
         return Left(e.response?.data);
       }
       return Left(e.toString());
