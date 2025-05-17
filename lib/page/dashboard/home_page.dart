@@ -4,10 +4,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_donation/bloc/auth/auth_bloc.dart';
+import 'package:flutter_donation/bloc/campaign/campaign_cubit.dart';
 import 'package:flutter_donation/bloc/category/category_cubit.dart';
 import 'package:flutter_donation/bloc/slider/sliders_cubit.dart';
 import 'package:flutter_donation/core/widget/fund_progress_bar.dart';
 import 'package:flutter_donation/core/widget/search_text_field.dart';
+import 'package:flutter_donation/resource/model/campaign_model.dart';
 import 'package:flutter_donation/resource/model/category_model.dart';
 import 'package:flutter_donation/resource/model/slider_model.dart';
 import 'package:go_router/go_router.dart';
@@ -25,9 +27,20 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
+    selectedCategory = 'Semua';
     context.read<SlidersCubit>().getSliders();
     context.read<CategoryCubit>().getCategories();
+    _filterByCategory('Semua');
     super.initState();
+  }
+
+  void _filterByCategory(String slug) {
+    // contoh: kalau 'Semua', ambil semua campaign
+    if (slug == 'Semua') {
+      context.read<CampaignCubit>().getCampaigns();
+    } else {
+      context.read<CampaignCubit>().getCampaignsByCategory(slugCategory: slug);
+    }
   }
 
   @override
@@ -133,6 +146,7 @@ class _HomePageState extends State<HomePage> {
                   );
                 } else if (state is CategoryLoaded) {
                   List<CategoryModel> categories = state.categories;
+
                   return Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16.0),
                     child: SizedBox(
@@ -142,10 +156,11 @@ class _HomePageState extends State<HomePage> {
                         itemCount: categories.length + 1,
                         itemBuilder: (contex, index) {
                           if (index == 0) {
-                            return _buildCategoryButton('Semua');
+                            return _buildCategoryButton('Semua', 'Semua');
                           }
                           return _buildCategoryButton(
                             categories[index - 1].name ?? '',
+                            categories[index - 1].slug,
                           );
                         },
                       ),
@@ -156,15 +171,48 @@ class _HomePageState extends State<HomePage> {
               },
             ),
             SizedBox(height: 16.0),
-            _buildDonationCard(),
-            _buildDonationCard(),
+
+            BlocBuilder<CampaignCubit, CampaignState>(
+              builder: (context, state) {
+                if (state is CampaignLoading) {
+                  return Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Center(child: CircularProgressIndicator()),
+                  );
+                } else if (state is CampaignError) {
+                  return Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Center(child: Text('Error: ${state.message}')),
+                  );
+                } else if (state is CampaignLoaded) {
+                  List<CampaignModel> campaigns = state.campaigns;
+                  if (campaigns.isEmpty) {
+                    return Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Center(
+                        child: Text('Tidak Ada Kampanye yang Tersedia'),
+                      ),
+                    );
+                  }
+                  return ListView.builder(
+                    physics: NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: campaigns.length,
+                    itemBuilder: (context, index) {
+                      return _buildDonationCard(campaigns[index]);
+                    },
+                  );
+                }
+                return Center(child: Text('No Campaigns Available'));
+              },
+            ),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildDonationCard() {
+  Widget _buildDonationCard(CampaignModel campaign) {
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
       elevation: 0.2,
@@ -183,8 +231,7 @@ class _HomePageState extends State<HomePage> {
               height: 180,
               width: double.infinity,
               child: CachedNetworkImage(
-                imageUrl:
-                    'https://donasi.appdev.my.id/storage/campaigns/d07qNDLrVfHmHeip1jNfaX0T1UntkX59NHHpAUpQ.jpg',
+                imageUrl: campaign.image,
                 placeholder:
                     (context, url) =>
                         Center(child: CircularProgressIndicator()),
@@ -196,7 +243,7 @@ class _HomePageState extends State<HomePage> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Text(
-              "Sedekah Al-Qur'an Rp40.000 = SAKSI Amal Jariyahmu",
+              campaign.title,
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
           ),
@@ -207,7 +254,10 @@ class _HomePageState extends State<HomePage> {
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: FundProgressBar(collectedAmount: 50000, maxAmount: 100000),
+            child: FundProgressBar(
+              collectedAmount: double.parse(campaign.sumDonation[0].total),
+              maxAmount: campaign.targetDonation.toDouble(),
+            ),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -229,16 +279,17 @@ class _HomePageState extends State<HomePage> {
     return Row(spacing: 8, children: [Icon(icon), Text(text)]);
   }
 
-  Widget _buildCategoryButton(String label) {
-    final isSelected = selectedCategory == label;
+  Widget _buildCategoryButton(String label, String? slug) {
+    final isSelected = selectedCategory == slug;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: InkWell(
         borderRadius: BorderRadius.circular(20),
         onTap: () {
           setState(() {
-            selectedCategory = label;
+            selectedCategory = slug;
           });
+          _filterByCategory(slug ?? '');
         },
         child: Container(
           alignment: Alignment.center,

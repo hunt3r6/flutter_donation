@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_donation/bloc/campaign/campaign_cubit.dart';
 import 'package:flutter_donation/bloc/category/category_cubit.dart';
 import 'package:flutter_donation/bloc/slider/sliders_cubit.dart';
 import 'package:flutter_donation/core/util/auth_interceptor.dart';
@@ -62,6 +63,7 @@ class MyApp extends StatelessWidget {
         BlocProvider.value(value: authBloc),
         BlocProvider(create: (_) => SlidersCubit(homeRemoteResource)),
         BlocProvider(create: (_) => CategoryCubit(homeRemoteResource)),
+        BlocProvider(create: (_) => CampaignCubit(homeRemoteResource)),
       ],
       child: MaterialApp.router(
         title: 'Flutter Donation',

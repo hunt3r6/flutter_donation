@@ -1,141 +1,134 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
-import 'package:flutter_donation/resource/model/user_model.dart';
 
 class CampaignModel {
-  final int? id;
-  final String? title;
-  final String? slug;
-  final String? description;
-  final String? image;
-  final String? targetDonation;
-  final DateTime? maxDate;
-  final DateTime? createdAt;
-  final DateTime? updatedAt;
-  final UserModel? user;
+  final int id;
+  final String title;
+  final String slug;
+  final int categoryId;
+  final int targetDonation;
+  final DateTime maxDate;
+  final String description;
+  final String image;
+  final int userId;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final User user;
+  final List<SumDonation> sumDonation;
 
   CampaignModel({
-    this.id,
-    this.title,
-    this.slug,
-    this.description,
-    this.image,
-    this.targetDonation,
-    this.maxDate,
-    this.createdAt,
-    this.updatedAt,
-    this.user,
+    required this.id,
+    required this.title,
+    required this.slug,
+    required this.categoryId,
+    required this.targetDonation,
+    required this.maxDate,
+    required this.description,
+    required this.image,
+    required this.userId,
+    required this.createdAt,
+    required this.updatedAt,
+    required this.user,
+    required this.sumDonation,
   });
 
-  CampaignModel copyWith({
-    int? id,
-    String? title,
-    String? slug,
-    String? description,
-    String? image,
-    String? targetDonation,
-    DateTime? maxDate,
-    DateTime? createdAt,
-    DateTime? updatedAt,
-    UserModel? user,
-  }) {
-    return CampaignModel(
-      id: id ?? this.id,
-      title: title ?? this.title,
-      slug: slug ?? this.slug,
-      description: description ?? this.description,
-      image: image ?? this.image,
-      targetDonation: targetDonation ?? this.targetDonation,
-      maxDate: maxDate ?? this.maxDate,
-      createdAt: createdAt ?? this.createdAt,
-      updatedAt: updatedAt ?? this.updatedAt,
-      user: user ?? this.user,
-    );
-  }
+  factory CampaignModel.fromRawJson(String str) =>
+      CampaignModel.fromJson(json.decode(str));
 
-  Map<String, dynamic> toMap() {
-    return <String, dynamic>{
-      'id': id,
-      'title': title,
-      'slug': slug,
-      'description': description,
-      'image': image,
-      'targetDonation': targetDonation,
-      'maxDate': maxDate?.millisecondsSinceEpoch,
-      'createdAt': createdAt?.millisecondsSinceEpoch,
-      'updatedAt': updatedAt?.millisecondsSinceEpoch,
-      'user': user?.toMap(),
-    };
-  }
+  String toRawJson() => json.encode(toJson());
 
-  factory CampaignModel.fromMap(Map<String, dynamic> map) {
-    return CampaignModel(
-      id: map['id'] != null ? map['id'] as int : null,
-      title: map['title'] != null ? map['title'] as String : null,
-      slug: map['slug'] != null ? map['slug'] as String : null,
-      description:
-          map['description'] != null ? map['description'] as String : null,
-      image: map['image'] != null ? map['image'] as String : null,
-      targetDonation:
-          map['targetDonation'] != null
-              ? map['targetDonation'] as String
-              : null,
-      maxDate:
-          map['maxDate'] != null
-              ? DateTime.fromMillisecondsSinceEpoch(map['maxDate'] as int)
-              : null,
-      createdAt:
-          map['createdAt'] != null
-              ? DateTime.fromMillisecondsSinceEpoch(map['createdAt'] as int)
-              : null,
-      updatedAt:
-          map['updatedAt'] != null
-              ? DateTime.fromMillisecondsSinceEpoch(map['updatedAt'] as int)
-              : null,
-      user:
-          map['user'] != null
-              ? UserModel.fromMap(map['user'] as Map<String, dynamic>)
-              : null,
-    );
-  }
+  factory CampaignModel.fromJson(Map<String, dynamic> json) => CampaignModel(
+    id: json["id"],
+    title: json["title"],
+    slug: json["slug"],
+    categoryId: json["category_id"],
+    targetDonation: json["target_donation"],
+    maxDate: DateTime.parse(json["max_date"]),
+    description: json["description"],
+    image: json["image"],
+    userId: json["user_id"],
+    createdAt: DateTime.parse(json["created_at"]),
+    updatedAt: DateTime.parse(json["updated_at"]),
+    user: User.fromJson(json["user"]),
+    sumDonation: List<SumDonation>.from(
+      json["sum_donation"].map((x) => SumDonation.fromJson(x)),
+    ),
+  );
 
-  String toJson() => json.encode(toMap());
+  Map<String, dynamic> toJson() => {
+    "id": id,
+    "title": title,
+    "slug": slug,
+    "category_id": categoryId,
+    "target_donation": targetDonation,
+    "max_date":
+        "${maxDate.year.toString().padLeft(4, '0')}-${maxDate.month.toString().padLeft(2, '0')}-${maxDate.day.toString().padLeft(2, '0')}",
+    "description": description,
+    "image": image,
+    "user_id": userId,
+    "created_at": createdAt.toIso8601String(),
+    "updated_at": updatedAt.toIso8601String(),
+    "user": user.toJson(),
+    "sum_donation": List<dynamic>.from(sumDonation.map((x) => x.toJson())),
+  };
+}
 
-  factory CampaignModel.fromJson(String source) =>
-      CampaignModel.fromMap(json.decode(source) as Map<String, dynamic>);
+class SumDonation {
+  final int campaignId;
+  final String total;
 
-  @override
-  String toString() {
-    return 'CampaignModel(id: $id, title: $title, slug: $slug, description: $description, image: $image, targetDonation: $targetDonation, maxDate: $maxDate, createdAt: $createdAt, updatedAt: $updatedAt, user: $user)';
-  }
+  SumDonation({required this.campaignId, required this.total});
 
-  @override
-  bool operator ==(covariant CampaignModel other) {
-    if (identical(this, other)) return true;
+  factory SumDonation.fromRawJson(String str) =>
+      SumDonation.fromJson(json.decode(str));
 
-    return other.id == id &&
-        other.title == title &&
-        other.slug == slug &&
-        other.description == description &&
-        other.image == image &&
-        other.targetDonation == targetDonation &&
-        other.maxDate == maxDate &&
-        other.createdAt == createdAt &&
-        other.updatedAt == updatedAt &&
-        other.user == user;
-  }
+  String toRawJson() => json.encode(toJson());
 
-  @override
-  int get hashCode {
-    return id.hashCode ^
-        title.hashCode ^
-        slug.hashCode ^
-        description.hashCode ^
-        image.hashCode ^
-        targetDonation.hashCode ^
-        maxDate.hashCode ^
-        createdAt.hashCode ^
-        updatedAt.hashCode ^
-        user.hashCode;
-  }
+  factory SumDonation.fromJson(Map<String, dynamic> json) =>
+      SumDonation(campaignId: json["campaign_id"], total: json["total"]);
+
+  Map<String, dynamic> toJson() => {"campaign_id": campaignId, "total": total};
+}
+
+class User {
+  final int id;
+  final String name;
+  final String email;
+  final dynamic emailVerifiedAt;
+  final String avatar;
+  final dynamic createdAt;
+  final DateTime updatedAt;
+
+  User({
+    required this.id,
+    required this.name,
+    required this.email,
+    required this.emailVerifiedAt,
+    required this.avatar,
+    required this.createdAt,
+    required this.updatedAt,
+  });
+
+  factory User.fromRawJson(String str) => User.fromJson(json.decode(str));
+
+  String toRawJson() => json.encode(toJson());
+
+  factory User.fromJson(Map<String, dynamic> json) => User(
+    id: json["id"],
+    name: json["name"],
+    email: json["email"],
+    emailVerifiedAt: json["email_verified_at"],
+    avatar: json["avatar"],
+    createdAt: json["created_at"],
+    updatedAt: DateTime.parse(json["updated_at"]),
+  );
+
+  Map<String, dynamic> toJson() => {
+    "id": id,
+    "name": name,
+    "email": email,
+    "email_verified_at": emailVerifiedAt,
+    "avatar": avatar,
+    "created_at": createdAt,
+    "updated_at": updatedAt.toIso8601String(),
+  };
 }
