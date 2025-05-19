@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_donation/resource/model/campaign_model.dart';
 import 'package:flutter_donation/resource/remote/home_remote_resource.dart';
@@ -13,7 +11,6 @@ class CampaignCubit extends Cubit<CampaignState> {
   CampaignCubit(this.homeRemoteResource) : super(CampaignState.initial());
 
   getCampaignsByCategory({String? slugCategory}) async {
-    log(slugCategory.toString());
     emit(CampaignState.loading());
     final result = await homeRemoteResource.getCampaignsByCategory(
       slugCategory ?? '',

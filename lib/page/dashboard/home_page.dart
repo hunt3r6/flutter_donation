@@ -7,6 +7,8 @@ import 'package:flutter_donation/bloc/auth/auth_bloc.dart';
 import 'package:flutter_donation/bloc/campaign/campaign_cubit.dart';
 import 'package:flutter_donation/bloc/category/category_cubit.dart';
 import 'package:flutter_donation/bloc/slider/sliders_cubit.dart';
+import 'package:flutter_donation/core/util/currency_helper.dart';
+import 'package:flutter_donation/core/util/date_utils_helper.dart';
 import 'package:flutter_donation/core/widget/fund_progress_bar.dart';
 import 'package:flutter_donation/core/widget/search_text_field.dart';
 import 'package:flutter_donation/resource/model/campaign_model.dart';
@@ -147,23 +149,20 @@ class _HomePageState extends State<HomePage> {
                 } else if (state is CategoryLoaded) {
                   List<CategoryModel> categories = state.categories;
 
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                    child: SizedBox(
-                      height: 45,
-                      child: ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: categories.length + 1,
-                        itemBuilder: (contex, index) {
-                          if (index == 0) {
-                            return _buildCategoryButton('Semua', 'Semua');
-                          }
-                          return _buildCategoryButton(
-                            categories[index - 1].name ?? '',
-                            categories[index - 1].slug,
-                          );
-                        },
-                      ),
+                  return SizedBox(
+                    height: 45,
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: categories.length + 1,
+                      itemBuilder: (contex, index) {
+                        if (index == 0) {
+                          return _buildCategoryButton('Semua', 'Semua');
+                        }
+                        return _buildCategoryButton(
+                          categories[index - 1].name ?? '',
+                          categories[index - 1].slug,
+                        );
+                      },
                     ),
                   );
                 }
@@ -250,7 +249,9 @@ class _HomePageState extends State<HomePage> {
           SizedBox(height: 2),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: Text('Rp. 8.736.302.761 Terkumpul dari Rp. 700.000.000'),
+            child: Text(
+              '${CurrencyHelper.formatRupiah(double.parse(campaign.sumDonation[0].total))} Terkumpul dari ${CurrencyHelper.formatRupiah(campaign.targetDonation.toDouble())}',
+            ),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -264,8 +265,11 @@ class _HomePageState extends State<HomePage> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                _textIcon(CupertinoIcons.person_2, '200 Donatur'),
-                _textIcon(CupertinoIcons.time, '164 Hari Lagi'),
+                _textIcon(CupertinoIcons.person, campaign.user.name),
+                _textIcon(
+                  CupertinoIcons.time,
+                  '${DateUtilsHelper.daysUntil(campaign.maxDate)} Hari Lagi',
+                ),
               ],
             ),
           ),
@@ -281,30 +285,27 @@ class _HomePageState extends State<HomePage> {
 
   Widget _buildCategoryButton(String label, String? slug) {
     final isSelected = selectedCategory == slug;
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+    return Container(
+      alignment: Alignment.center,
+      margin: const EdgeInsets.only(left: 16),
+      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      decoration: BoxDecoration(
+        color: isSelected ? Colors.blue : Colors.white,
+        borderRadius: BorderRadius.circular(15),
+      ),
       child: InkWell(
-        borderRadius: BorderRadius.circular(20),
         onTap: () {
           setState(() {
             selectedCategory = slug;
+            _filterByCategory(slug!);
           });
-          _filterByCategory(slug ?? '');
         },
-        child: Container(
-          alignment: Alignment.center,
-          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          decoration: BoxDecoration(
-            color: isSelected ? Colors.blue : Colors.white,
-            borderRadius: BorderRadius.circular(15),
-          ),
-          child: Text(
-            label,
-            style: TextStyle(
-              fontSize: 14,
-              fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-              color: isSelected ? Colors.white : Colors.black54,
-            ),
+        child: Text(
+          label,
+          style: TextStyle(
+            fontSize: 14,
+            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+            color: isSelected ? Colors.white : Colors.black54,
           ),
         ),
       ),
