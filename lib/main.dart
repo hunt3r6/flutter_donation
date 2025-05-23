@@ -6,8 +6,8 @@ import 'package:flutter_donation/bloc/category/category_cubit.dart';
 import 'package:flutter_donation/bloc/slider/sliders_cubit.dart';
 import 'package:flutter_donation/core/util/auth_interceptor.dart';
 import 'package:flutter_donation/resource/remote/home_remote_resource.dart';
+import 'package:flutter_donation/resource/remote/profile_remote_resource.dart';
 import 'package:google_fonts/google_fonts.dart';
-
 import 'package:flutter_donation/app_router.dart';
 import 'package:flutter_donation/bloc/auth/auth_bloc.dart';
 import 'package:flutter_donation/core/constants/app_config.dart';
@@ -27,11 +27,15 @@ void main() {
   // Add any additional interceptors or configurations to the Dio instance here
   final authRemoteResource = AuthRemoteResource(dio);
   final homeRemoteResource = HomeRemoteResource(dio);
+  final profilRemoteResource = ProfileRemoteResource(dio);
 
   final authBloc = AuthBloc(authRemoteResource)
     ..add(AuthEvent.checkLoginStatus());
 
-  final appRouter = AppRouter(authBloc: authBloc);
+  final appRouter = AppRouter(
+    authBloc: authBloc,
+    profileRemoteResource: profilRemoteResource,
+  );
 
   //Add the interceptor to the Dio instance
   dio.interceptors.add(AuthInterceptor(authBloc));

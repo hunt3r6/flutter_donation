@@ -3,7 +3,15 @@ import 'package:flutter/material.dart';
 class ActionButton extends StatelessWidget {
   final String label;
   final VoidCallback? onPressed;
-  const ActionButton({super.key, required this.label, required this.onPressed});
+  final Color? colorButton;
+  final Color? colorText;
+  const ActionButton({
+    super.key,
+    required this.label,
+    required this.onPressed,
+    this.colorButton,
+    this.colorText,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -12,7 +20,7 @@ class ActionButton extends StatelessWidget {
       width: double.infinity,
       child: FilledButton.tonal(
         style: ButtonStyle(
-          backgroundColor: WidgetStateProperty.all(Colors.blue),
+          backgroundColor: WidgetStateProperty.all(colorButton ?? Colors.blue),
           shape: WidgetStateProperty.all(
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
           ),
@@ -20,8 +28,8 @@ class ActionButton extends StatelessWidget {
         onPressed: onPressed,
         child: Text(
           label,
-          style: const TextStyle(
-            color: Colors.white,
+          style: TextStyle(
+            color: colorText ?? Colors.white,
             fontSize: 16,
             fontWeight: FontWeight.bold,
           ),

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_donation/bloc/auth/auth_bloc.dart';
+import 'package:flutter_donation/bloc/profile/profile_cubit.dart';
 import 'package:flutter_donation/core/animation/custom_fade_page.dart';
 import 'package:flutter_donation/page/dashboard/account_page.dart';
 import 'package:flutter_donation/page/dashboard/dashboard_page.dart';
@@ -7,13 +9,16 @@ import 'package:flutter_donation/page/dashboard/donation_list_page.dart';
 import 'package:flutter_donation/page/dashboard/home_page.dart';
 import 'package:flutter_donation/page/dashboard/my_donations_page.dart';
 import 'package:flutter_donation/page/login/login_page.dart';
+import 'package:flutter_donation/page/profile/update_profile_page.dart';
 import 'package:flutter_donation/page/register/register_page.dart';
+import 'package:flutter_donation/resource/remote/profile_remote_resource.dart';
 import 'package:go_router/go_router.dart';
 
 class AppRouter {
   final AuthBloc authBloc;
+  final ProfileRemoteResource profileRemoteResource;
 
-  AppRouter({required this.authBloc});
+  AppRouter({required this.authBloc, required this.profileRemoteResource});
 
   late final GoRouter router = GoRouter(
     refreshListenable: GoRouterRefreshStream(authBloc.stream),
@@ -65,8 +70,13 @@ class AppRouter {
           GoRoute(
             path: '/dashboard/account',
             pageBuilder:
-                (context, state) =>
-                    CustomFadePage(child: AccountPage(), key: state.pageKey),
+                (context, state) => CustomFadePage(
+                  child: BlocProvider(
+                    create: (context) => ProfileCubit(profileRemoteResource),
+                    child: AccountPage(),
+                  ),
+                  key: state.pageKey,
+                ),
           ),
         ],
       ),
@@ -80,6 +90,18 @@ class AppRouter {
         path: '/register',
         pageBuilder: (context, state) {
           return CustomFadePage(child: RegisterPage(), key: state.pageKey);
+        },
+      ),
+      GoRoute(
+        path: '/update_profile',
+        pageBuilder: (context, state) {
+          return CustomFadePage(
+            child: BlocProvider(
+              create: (context) => ProfileCubit(profileRemoteResource),
+              child: UpdateProfilePage(),
+            ),
+            key: state.pageKey,
+          );
         },
       ),
     ],

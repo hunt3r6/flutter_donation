@@ -10,6 +10,7 @@ class FormTextField extends StatefulWidget {
   final FocusNode? focusNode;
   final TextInputAction? textInputAction;
   final ValueChanged<String>? onFieldSubmitted;
+  final bool enabled;
 
   const FormTextField({
     super.key,
@@ -21,6 +22,7 @@ class FormTextField extends StatefulWidget {
     this.focusNode,
     this.textInputAction,
     this.onFieldSubmitted,
+    this.enabled = true,
   });
 
   @override
@@ -43,6 +45,7 @@ class _FormTextFieldState extends State<FormTextField> {
         ],
       ),
       child: TextFormField(
+        enabled: widget.enabled,
         controller: widget.controller,
         focusNode: widget.focusNode,
         textInputAction: widget.textInputAction,
@@ -65,6 +68,20 @@ class _FormTextFieldState extends State<FormTextField> {
           focusedBorder: const OutlineInputBorder(
             borderRadius: BorderRadius.all(Radius.circular(15)),
             borderSide: BorderSide(color: Colors.blue, width: 1),
+          ),
+          errorBorder: const OutlineInputBorder(
+            borderRadius: BorderRadius.all(Radius.circular(15)),
+            borderSide: BorderSide(
+              color: Colors.red,
+              width: 1,
+            ), // Border saat error
+          ),
+          focusedErrorBorder: const OutlineInputBorder(
+            borderRadius: BorderRadius.all(Radius.circular(15)),
+            borderSide: BorderSide(
+              color: Colors.redAccent,
+              width: 1,
+            ), // Fokus + error
           ),
         ),
       ),
