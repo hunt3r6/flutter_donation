@@ -10,6 +10,7 @@ import 'package:flutter_donation/page/dashboard/donation_list_page.dart';
 import 'package:flutter_donation/page/dashboard/home_page.dart';
 import 'package:flutter_donation/page/dashboard/my_donations_page.dart';
 import 'package:flutter_donation/page/login/login_page.dart';
+import 'package:flutter_donation/page/profile/update_password_page.dart';
 import 'package:flutter_donation/page/profile/update_profile_page.dart';
 import 'package:flutter_donation/page/register/register_page.dart';
 import 'package:flutter_donation/resource/remote/donation_remote_resource.dart';
@@ -109,6 +110,18 @@ class AppRouter {
             child: BlocProvider(
               create: (context) => ProfileCubit(profileRemoteResource),
               child: UpdateProfilePage(),
+            ),
+            key: state.pageKey,
+          );
+        },
+      ),
+      GoRoute(
+        path: '/update_password',
+        pageBuilder: (context, state) {
+          return CustomFadePage(
+            child: BlocProvider(
+              create: (context) => ProfileCubit(profileRemoteResource),
+              child: UpdatePasswordPage(),
             ),
             key: state.pageKey,
           );

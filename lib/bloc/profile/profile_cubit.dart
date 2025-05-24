@@ -42,7 +42,7 @@ class ProfileCubit extends Cubit<ProfileState> {
     required String newPassword,
     required String confirmPassword,
   }) async {
-    emit(ProfileState.loading());
+    emit(ProfileState.updating());
     final result = await profileRemoteResource.updatePassword(
       newPassword: newPassword,
       confirmPassword: confirmPassword,
