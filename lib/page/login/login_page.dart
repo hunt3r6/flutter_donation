@@ -31,6 +31,31 @@ class _LoginPageState extends State<LoginPage> {
     super.dispose();
   }
 
+  void _showToast({
+    required BuildContext context,
+    required ToastificationType type,
+    required String title,
+    required String description,
+  }) {
+    toastification.show(
+      context: context,
+      type: type,
+      style: ToastificationStyle.fillColored,
+      title: Text(title),
+      description: Text(description),
+      alignment: Alignment.center,
+      autoCloseDuration: const Duration(seconds: 3),
+      animationBuilder: (context, animation, alignment, child) {
+        return FadeTransition(opacity: animation, child: child);
+      },
+      borderRadius: BorderRadius.circular(15.0),
+      showProgressBar: true,
+      closeOnClick: false,
+      pauseOnHover: false,
+      showIcon: false,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,44 +77,22 @@ class _LoginPageState extends State<LoginPage> {
               break;
 
             case Authenticated():
-              toastification.show(
+              _showToast(
                 context: context,
                 type: ToastificationType.success,
-                style: ToastificationStyle.fillColored,
-                title: Text('Login Berhasil'),
-                description: Text('Selamat datang kembali'),
-                alignment: Alignment.center,
-                autoCloseDuration: const Duration(seconds: 3),
-                animationBuilder: (context, animation, alignment, child) {
-                  return FadeTransition(opacity: animation, child: child);
-                },
-                borderRadius: BorderRadius.circular(15.0),
-                showProgressBar: true,
-                closeOnClick: false,
-                pauseOnHover: false,
-                showIcon: false,
+                title: 'Berhasil Masuk',
+                description: 'Selamat datang kembali',
               );
               context.go('/dashboard/home');
 
               break;
 
             case Failure(error: String message):
-              toastification.show(
+              _showToast(
                 context: context,
-                type: ToastificationType.error,
-                style: ToastificationStyle.fillColored,
-                title: Text(message),
-                description: Text('Cek kembali email dan password anda'),
-                alignment: Alignment.center,
-                autoCloseDuration: const Duration(seconds: 3),
-                animationBuilder: (context, animation, alignment, child) {
-                  return FadeTransition(opacity: animation, child: child);
-                },
-                borderRadius: BorderRadius.circular(15.0),
-                showProgressBar: true,
-                closeOnClick: false,
-                pauseOnHover: false,
-                showIcon: false,
+                type: ToastificationType.success,
+                title: message,
+                description: 'Slilahkan Cek Email dan Password Anda',
               );
               break;
           }
