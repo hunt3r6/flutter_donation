@@ -1,3 +1,5 @@
+import 'package:intl/intl.dart';
+
 class DateUtilsHelper {
   /// Menghitung berapa hari lagi menuju [targetDate] dari hari ini.
   /// Jika tanggal sudah lewat, akan mengembalikan 0.
@@ -23,5 +25,11 @@ class DateUtilsHelper {
     return "${date.day.toString().padLeft(2, '0')}-"
         "${date.month.toString().padLeft(2, '0')}-"
         "${date.year}";
+  }
+
+  static String convertDate(String date) {
+    var dateParse = DateTime.parse(date).toLocal();
+    var formattedDate = DateFormat('dd MMM yyyy').format(dateParse);
+    return formattedDate;
   }
 }

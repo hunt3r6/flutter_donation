@@ -5,6 +5,7 @@ import 'package:flutter_donation/bloc/campaign/campaign_cubit.dart';
 import 'package:flutter_donation/bloc/category/category_cubit.dart';
 import 'package:flutter_donation/bloc/slider/sliders_cubit.dart';
 import 'package:flutter_donation/core/util/auth_interceptor.dart';
+import 'package:flutter_donation/resource/remote/donation_remote_resource.dart';
 import 'package:flutter_donation/resource/remote/home_remote_resource.dart';
 import 'package:flutter_donation/resource/remote/profile_remote_resource.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -13,7 +14,8 @@ import 'package:flutter_donation/bloc/auth/auth_bloc.dart';
 import 'package:flutter_donation/core/constants/app_config.dart';
 import 'package:flutter_donation/resource/remote/auth_remote_resource.dart';
 
-void main() {
+void main() async {
+  // Pastikan binding Flutter sudah diinisialisasi jika Anda melakukan operasi async sebelum runApp
   WidgetsFlutterBinding.ensureInitialized();
   // Initialize the Dio instance with base options
   final dio = Dio(
@@ -28,12 +30,14 @@ void main() {
   final authRemoteResource = AuthRemoteResource(dio);
   final homeRemoteResource = HomeRemoteResource(dio);
   final profilRemoteResource = ProfileRemoteResource(dio);
+  final donationRemoteResource = DonationRemoteResource(dio);
 
   final authBloc = AuthBloc(authRemoteResource)
     ..add(AuthEvent.checkLoginStatus());
 
   final appRouter = AppRouter(
     authBloc: authBloc,
+    donationRemoteResource: donationRemoteResource,
     profileRemoteResource: profilRemoteResource,
   );
 

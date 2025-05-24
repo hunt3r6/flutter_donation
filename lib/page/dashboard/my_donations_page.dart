@@ -1,6 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_donation/bloc/donation/donation_cubit.dart';
+import 'package:flutter_donation/core/util/currency_helper.dart';
 import 'package:flutter_donation/core/widget/custom_app_bar.dart';
+import 'package:flutter_donation/resource/model/donation_model.dart';
 
 class MyDonationsPage extends StatefulWidget {
   const MyDonationsPage({super.key});
@@ -11,14 +15,42 @@ class MyDonationsPage extends StatefulWidget {
 
 class _MyDonationsPageState extends State<MyDonationsPage> {
   @override
+  void initState() {
+    getMyDonations();
+    super.initState();
+  }
+
+  void getMyDonations() {
+    context.read<DonationCubit>().fetchDonations();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(title: 'Riwayat Donasi Saya', centerTitle: false),
-      body: Column(children: [_buildDonationCard(), _buildDonationCard()]),
+      body: BlocBuilder<DonationCubit, DonationState>(
+        builder: (context, state) {
+          if (state is DonationLoading) {
+            return Center(child: CircularProgressIndicator());
+          } else if (state is DonationError) {
+            return Center(child: Text(state.message));
+          } else if (state is DonationLoaded) {
+            return ListView.builder(
+              itemCount: state.donations.length,
+              itemBuilder: (context, index) {
+                final donations = state.donations[index];
+                return _buildDonationCard(donations);
+              },
+            );
+          }
+
+          return Center(child: Text('No donations found'));
+        },
+      ),
     );
   }
 
-  Widget _buildDonationCard() {
+  Widget _buildDonationCard(DonationModel donation) {
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
@@ -33,8 +65,7 @@ class _MyDonationsPageState extends State<MyDonationsPage> {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(10),
                 child: CachedNetworkImage(
-                  imageUrl:
-                      'https://donasi.appdev.my.id/storage/campaigns/d07qNDLrVfHmHeip1jNfaX0T1UntkX59NHHpAUpQ.jpg',
+                  imageUrl: donation.campaign.image,
                   placeholder:
                       (context, url) =>
                           Center(child: CircularProgressIndicator()),
@@ -53,25 +84,21 @@ class _MyDonationsPageState extends State<MyDonationsPage> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'Sedekah Al-Qur\'an Rp40.000 = SAKSI Amal Jariyahmu',
+                    donation.campaign.title,
                     maxLines: 3,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
-                  Row(
-                    children: [
-                      Text(
-                        '02-May-2025 ',
-                        style: TextStyle(color: Colors.blueGrey),
-                      ),
-                      Text(
-                        'Rp40.000',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.blue,
-                        ),
-                      ),
-                    ],
+                  Text(
+                    donation.createdAt,
+                    style: TextStyle(color: Colors.blueGrey),
+                  ),
+                  Text(
+                    CurrencyHelper.formatRupiah(donation.amount.toDouble()),
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.blue,
+                    ),
                   ),
                 ],
               ),
@@ -84,7 +111,7 @@ class _MyDonationsPageState extends State<MyDonationsPage> {
               color: Colors.blue,
               borderRadius: BorderRadius.circular(10),
             ),
-            child: const Text('Sukses', style: TextStyle(color: Colors.white)),
+            child: Text(donation.status, style: TextStyle(color: Colors.white)),
           ),
         ],
       ),

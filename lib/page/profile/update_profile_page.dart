@@ -150,110 +150,96 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
             },
             builder: (context, state) {
               // Bungkus Form dengan Stack untuk menampilkan overlay loading
-              return Stack(
-                children: [
-                  Form(
-                    key: _formKey,
-                    child: Column(
+              return Form(
+                key: _formKey,
+                child: Column(
+                  children: [
+                    Stack(
+                      alignment: Alignment.bottomRight,
                       children: [
-                        Stack(
-                          alignment: Alignment.bottomRight,
-                          children: [
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(50),
-                              child:
-                                  _image != null
-                                      ? Image.file(
-                                        _image!,
-                                        width: 150,
-                                        height: 150,
-                                        fit: BoxFit.cover,
-                                      )
-                                      : CachedNetworkImage(
-                                        // Gunakan user.avatar dari state page, bukan dari state BLoC secara langsung di sini
-                                        // agar gambar tetap tampil selama state BLoC berubah (misal ke ProfileUpdating)
-                                        imageUrl: user.avatar ?? '',
-                                        placeholder:
-                                            (context, url) => const Center(
-                                              child:
-                                                  CircularProgressIndicator(),
-                                            ),
-                                        errorWidget:
-                                            (context, url, error) =>
-                                                const Icon(Icons.error),
-                                        fit: BoxFit.cover,
-                                        width: 150,
-                                        height: 150,
-                                      ),
-                            ),
-                            Positioned(
-                              bottom: 0,
-                              right: 0,
-                              child: GestureDetector(
-                                // Nonaktifkan tap jika sedang update
-                                onTap:
-                                    _isUpdating
-                                        ? null
-                                        : () async {
-                                          await _showImageSourceActionSheet();
-                                        },
-                                child: Container(
-                                  padding: const EdgeInsets.all(6),
-                                  decoration: BoxDecoration(
-                                    color: Colors.blue,
-                                    shape: BoxShape.circle,
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(50),
+                          child:
+                              _image != null
+                                  ? Image.file(
+                                    _image!,
+                                    width: 150,
+                                    height: 150,
+                                    fit: BoxFit.cover,
+                                  )
+                                  : CachedNetworkImage(
+                                    // Gunakan user.avatar dari state page, bukan dari state BLoC secara langsung di sini
+                                    // agar gambar tetap tampil selama state BLoC berubah (misal ke ProfileUpdating)
+                                    imageUrl: user.avatar ?? '',
+                                    placeholder:
+                                        (context, url) => const Center(
+                                          child: CircularProgressIndicator(),
+                                        ),
+                                    errorWidget:
+                                        (context, url, error) =>
+                                            const Icon(Icons.error),
+                                    fit: BoxFit.cover,
+                                    width: 150,
+                                    height: 150,
                                   ),
-                                  child: const Icon(
-                                    Icons.edit,
-                                    color: Colors.white,
-                                    size: 26,
-                                  ),
-                                ),
+                        ),
+                        Positioned(
+                          bottom: 0,
+                          right: 0,
+                          child: GestureDetector(
+                            // Nonaktifkan tap jika sedang update
+                            onTap:
+                                _isUpdating
+                                    ? null
+                                    : () async {
+                                      await _showImageSourceActionSheet();
+                                    },
+                            child: Container(
+                              padding: const EdgeInsets.all(6),
+                              decoration: BoxDecoration(
+                                color: Colors.blue,
+                                shape: BoxShape.circle,
+                              ),
+                              child: const Icon(
+                                Icons.edit,
+                                color: Colors.white,
+                                size: 26,
                               ),
                             ),
-                          ],
-                        ),
-                        const SizedBox(height: 12),
-                        FormTextField(
-                          controller: _nameController,
-                          hintText: 'Nama Lengkap',
-                          prefixIcon: CupertinoIcons.person,
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Mohon Masukkan Nama Lengkap';
-                            }
-                            return null;
-                          },
-                        ),
-                        const SizedBox(height: 16),
-                        FormTextField(
-                          enabled: false, // Email field tidak bisa diubah
-                          controller: _emailController,
-                          hintText: 'Alamat Email',
-                          prefixIcon: CupertinoIcons.mail,
-                        ),
-                        const SizedBox(height: 24),
-                        ActionButton(
-                          label:
-                              _isUpdating
-                                  ? 'Sedang Memproses...'
-                                  : 'Update Profile',
-                          // Nonaktifkan tombol jika sedang update
-                          onPressed:
-                              _isUpdating ? null : () => _updateProfile(),
+                          ),
                         ),
                       ],
                     ),
-                  ),
-                  // Tampilkan overlay loading jika _isUpdating true
-                  if (_isUpdating)
-                    Container(
-                      color: Colors.black.withValues(
-                        alpha: 0.5,
-                      ), // Latar belakang semi-transparan
-                      child: const Center(child: CircularProgressIndicator()),
+                    const SizedBox(height: 12),
+                    FormTextField(
+                      controller: _nameController,
+                      hintText: 'Nama Lengkap',
+                      prefixIcon: CupertinoIcons.person,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Mohon Masukkan Nama Lengkap';
+                        }
+                        return null;
+                      },
                     ),
-                ],
+                    const SizedBox(height: 16),
+                    FormTextField(
+                      enabled: false, // Email field tidak bisa diubah
+                      controller: _emailController,
+                      hintText: 'Alamat Email',
+                      prefixIcon: CupertinoIcons.mail,
+                    ),
+                    const SizedBox(height: 24),
+                    ActionButton(
+                      label:
+                          _isUpdating
+                              ? 'Sedang Memproses...'
+                              : 'Update Profile',
+                      // Nonaktifkan tombol jika sedang update
+                      onPressed: _isUpdating ? null : () => _updateProfile(),
+                    ),
+                  ],
+                ),
               );
             },
           ),
