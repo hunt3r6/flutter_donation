@@ -22,7 +22,7 @@ class ProfileCubit extends Cubit<ProfileState> {
   }
 
   updateProfile({required String name, required File? avatar}) async {
-    emit(ProfileState.loading());
+    emit(ProfileState.updating());
     final result = await profileRemoteResource.updateUserProfile(
       name: name,
       avatar: avatar,

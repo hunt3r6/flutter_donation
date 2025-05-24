@@ -109,6 +109,38 @@ String toString() {
 /// @nodoc
 
 
+class ProfileUpdating implements ProfileState {
+  const ProfileUpdating();
+  
+
+
+
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ProfileUpdating);
+}
+
+
+@override
+int get hashCode => runtimeType.hashCode;
+
+@override
+String toString() {
+  return 'ProfileState.updating()';
+}
+
+
+}
+
+
+
+
+/// @nodoc
+
+
 class ProfileLoaded implements ProfileState {
   const ProfileLoaded(this.user);
   
@@ -125,12 +157,12 @@ $ProfileLoadedCopyWith<ProfileLoaded> get copyWith => _$ProfileLoadedCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ProfileLoaded&&const DeepCollectionEquality().equals(other.user, user));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ProfileLoaded&&(identical(other.user, user) || other.user == user));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(user));
+int get hashCode => Object.hash(runtimeType,user);
 
 @override
 String toString() {
@@ -162,9 +194,9 @@ class _$ProfileLoadedCopyWithImpl<$Res>
 
 /// Create a copy of ProfileState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') $Res call({Object? user = freezed,}) {
+@pragma('vm:prefer-inline') $Res call({Object? user = null,}) {
   return _then(ProfileLoaded(
-freezed == user ? _self.user : user // ignore: cast_nullable_to_non_nullable
+null == user ? _self.user : user // ignore: cast_nullable_to_non_nullable
 as UserModel,
   ));
 }
