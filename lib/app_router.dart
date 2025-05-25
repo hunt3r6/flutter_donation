@@ -6,7 +6,7 @@ import 'package:flutter_donation/bloc/profile/profile_cubit.dart';
 import 'package:flutter_donation/core/animation/custom_fade_page.dart';
 import 'package:flutter_donation/page/dashboard/account_page.dart';
 import 'package:flutter_donation/page/dashboard/dashboard_page.dart';
-import 'package:flutter_donation/page/dashboard/donation_list_page.dart';
+import 'package:flutter_donation/page/dashboard/campaign_list_page.dart';
 import 'package:flutter_donation/page/dashboard/home_page.dart';
 import 'package:flutter_donation/page/dashboard/my_donations_page.dart';
 import 'package:flutter_donation/page/login/login_page.dart';
@@ -60,10 +60,10 @@ class AppRouter {
                     CustomFadePage(child: HomePage(), key: state.pageKey),
           ),
           GoRoute(
-            path: '/dashboard/donation_list',
+            path: '/dashboard/campaign_list',
             pageBuilder:
                 (context, state) => CustomFadePage(
-                  child: DonationListPage(),
+                  child: CampaignListPage(),
                   key: state.pageKey,
                 ),
           ),

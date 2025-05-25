@@ -16,6 +16,7 @@ class FundProgressBar extends StatelessWidget {
     final progress = collectedAmount / maxAmount;
 
     return LinearProgressIndicator(
+      borderRadius: BorderRadius.circular(8),
       value: progress,
       minHeight: 8,
       backgroundColor: Colors.grey[300],

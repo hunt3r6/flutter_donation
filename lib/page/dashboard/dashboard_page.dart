@@ -14,7 +14,7 @@ class DashboardPage extends StatefulWidget {
 class _DashboardPageState extends State<DashboardPage> {
   final tabs = [
     '/dashboard/home',
-    '/dashboard/donation_list',
+    '/dashboard/campaign_list',
     '/dashboard/my_donations',
     '/dashboard/account',
   ];
@@ -30,7 +30,7 @@ class _DashboardPageState extends State<DashboardPage> {
           CupertinoIcons.person,
         ];
 
-        final labels = ['Home', 'List', 'Donations', 'Account'];
+        final labels = ['Home', 'Campaigns', 'Donations', 'Account'];
 
         return NavigationDestination(
           selectedIcon: Icon(icons[index], color: Colors.blue),

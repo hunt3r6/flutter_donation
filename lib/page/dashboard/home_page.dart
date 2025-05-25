@@ -169,8 +169,7 @@ class _HomePageState extends State<HomePage> {
                 return Center(child: Text('No Categories Available'));
               },
             ),
-            SizedBox(height: 16.0),
-
+            const SizedBox(height: 16.0),
             BlocBuilder<CampaignCubit, CampaignState>(
               builder: (context, state) {
                 if (state is CampaignLoading) {
@@ -211,6 +210,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  /// Membuat Card untuk menampilkan informasi donasi
   Widget _buildDonationCard(CampaignModel campaign) {
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
@@ -234,7 +234,7 @@ class _HomePageState extends State<HomePage> {
                 placeholder:
                     (context, url) =>
                         Center(child: CircularProgressIndicator()),
-                errorWidget: (context, url, error) => Icon(Icons.error),
+                errorWidget: (context, url, error) => const Icon(Icons.error),
                 fit: BoxFit.cover,
               ),
             ),
@@ -250,7 +250,20 @@ class _HomePageState extends State<HomePage> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: Text(
-              '${CurrencyHelper.formatRupiah(double.parse(campaign.sumDonation[0].total))} Terkumpul dari ${CurrencyHelper.formatRupiah(campaign.targetDonation.toDouble())}',
+              CurrencyHelper.formatRupiah(
+                double.parse(campaign.sumDonation[0].total),
+              ),
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Colors.blue,
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: Text(
+              'Terkumpul dari ${CurrencyHelper.formatRupiah(campaign.targetDonation.toDouble())}',
             ),
           ),
           Padding(
@@ -279,10 +292,12 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  /// Membuat Widget Text dan Icon
   Widget _textIcon(IconData icon, String text) {
     return Row(spacing: 8, children: [Icon(icon), Text(text)]);
   }
 
+  /// Membuat Tombol Kategori
   Widget _buildCategoryButton(String label, String? slug) {
     final isSelected = selectedCategory == slug;
     return Container(
@@ -312,6 +327,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  /// Membuat Carousel Slider
   Widget _buildCarousel(List<SliderModel> sliders) {
     final List<Widget> imageSliders =
         sliders
