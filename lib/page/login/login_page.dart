@@ -90,7 +90,7 @@ class _LoginPageState extends State<LoginPage> {
             case Failure(error: String message):
               _showToast(
                 context: context,
-                type: ToastificationType.success,
+                type: ToastificationType.error,
                 title: message,
                 description: 'Slilahkan Cek Email dan Password Anda',
               );
