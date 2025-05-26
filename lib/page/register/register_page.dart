@@ -61,22 +61,11 @@ class _RegisterPageState extends State<RegisterPage> {
         listener: (context, state) {
           switch (state) {
             case RegisterSuccess(message: String message):
-              toastification.show(
+              _showToast(
                 context: context,
                 type: ToastificationType.success,
-                style: ToastificationStyle.fillColored,
-                title: Text(message),
-                description: Text('Silakan Masuk ke Akun Anda'),
-                alignment: Alignment.center,
-                autoCloseDuration: const Duration(seconds: 3),
-                animationBuilder: (context, animation, alignment, child) {
-                  return FadeTransition(opacity: animation, child: child);
-                },
-                borderRadius: BorderRadius.circular(15.0),
-                showProgressBar: true,
-                closeOnClick: false,
-                pauseOnHover: false,
-                showIcon: false,
+                title: message,
+                description: 'Silakan Masuk ke Akun Anda',
               );
               context.pop();
               break;
@@ -223,6 +212,31 @@ class _RegisterPageState extends State<RegisterPage> {
           ),
         ),
       ),
+    );
+  }
+
+  void _showToast({
+    required BuildContext context,
+    required ToastificationType type,
+    required String title,
+    required String description,
+  }) {
+    toastification.show(
+      context: context,
+      type: type,
+      style: ToastificationStyle.fillColored,
+      title: Text(title),
+      description: Text(description),
+      alignment: Alignment.center,
+      autoCloseDuration: const Duration(seconds: 3),
+      animationBuilder: (context, animation, alignment, child) {
+        return FadeTransition(opacity: animation, child: child);
+      },
+      borderRadius: BorderRadius.circular(15.0),
+      showProgressBar: true,
+      closeOnClick: false,
+      pauseOnHover: false,
+      showIcon: false,
     );
   }
 
