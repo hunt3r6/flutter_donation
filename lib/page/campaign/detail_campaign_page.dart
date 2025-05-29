@@ -233,11 +233,15 @@ class _DetailCampaignPageState extends State<DetailCampaignPage> {
         final donation = donations[index];
         return ListTile(
           leading: CircleAvatar(
-            // backgroundImage: NetworkImage(donation.donatur?.avatar ?? ''),
+            backgroundImage: NetworkImage(donation.donatur?.avatar ?? ''),
           ),
-          // title: Text(donation.donatur?.name ?? 'Anonim'), // Handle null name
+          title: Text(donation.donatur?.name ?? 'Anonim'), // Handle null name
           subtitle: Text(
             CurrencyHelper.formatRupiah(donation.amount?.toDouble() ?? 0.0),
+            style: const TextStyle(
+              color: Colors.blue,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         );
       },
