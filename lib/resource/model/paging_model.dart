@@ -7,7 +7,6 @@ class PagingModel<T> {
   final int? from;
   final int? lastPage;
   final String? lastPageUrl;
-  final List<Link>? links;
   final String? nextPageUrl;
   final String? path;
   final int? perPage;
@@ -22,7 +21,6 @@ class PagingModel<T> {
     this.from,
     this.lastPage,
     this.lastPageUrl,
-    this.links,
     this.nextPageUrl,
     this.path,
     this.perPage,
@@ -52,10 +50,6 @@ class PagingModel<T> {
     from: json["from"],
     lastPage: json["last_page"],
     lastPageUrl: json["last_page_url"],
-    links:
-        json["links"] == null
-            ? []
-            : List<Link>.from(json["links"].map((x) => Link.fromMap(x))),
     nextPageUrl: json["next_page_url"],
     path: json["path"],
     perPage: json["per_page"],
@@ -71,34 +65,11 @@ class PagingModel<T> {
     "from": from,
     "last_page": lastPage,
     "last_page_url": lastPageUrl,
-    "links":
-        links == null ? [] : List<dynamic>.from(links!.map((x) => x.toMap())),
     "next_page_url": nextPageUrl,
     "path": path,
     "per_page": perPage,
     "prev_page_url": prevPageUrl,
     "to": to,
     "total": total,
-  };
-}
-
-class Link {
-  final String? url;
-  final String? label;
-  final bool? active;
-
-  Link({this.url, this.label, this.active});
-
-  factory Link.fromJson(String str) => Link.fromMap(json.decode(str));
-
-  String toJson() => json.encode(toMap());
-
-  factory Link.fromMap(Map<String, dynamic> json) =>
-      Link(url: json["url"], label: json["label"], active: json["active"]);
-
-  Map<String, dynamic> toMap() => {
-    "url": url,
-    "label": label,
-    "active": active,
   };
 }

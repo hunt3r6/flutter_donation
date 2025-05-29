@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 
 class ActionButton extends StatelessWidget {
@@ -5,12 +6,14 @@ class ActionButton extends StatelessWidget {
   final VoidCallback? onPressed;
   final Color? colorButton;
   final Color? colorText;
+  final int? fontSize;
   const ActionButton({
     super.key,
     required this.label,
     required this.onPressed,
     this.colorButton,
     this.colorText,
+    this.fontSize = 16,
   });
 
   @override
@@ -30,7 +33,7 @@ class ActionButton extends StatelessWidget {
           label,
           style: TextStyle(
             color: colorText ?? Colors.white,
-            fontSize: 16,
+            fontSize: fontSize?.toDouble(),
             fontWeight: FontWeight.bold,
           ),
         ),

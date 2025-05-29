@@ -11,6 +11,7 @@ class FormTextField extends StatefulWidget {
   final TextInputAction? textInputAction;
   final ValueChanged<String>? onFieldSubmitted;
   final bool enabled;
+  final int maxLines;
 
   const FormTextField({
     super.key,
@@ -23,6 +24,7 @@ class FormTextField extends StatefulWidget {
     this.textInputAction,
     this.onFieldSubmitted,
     this.enabled = true,
+    this.maxLines = 1,
   });
 
   @override
@@ -84,6 +86,7 @@ class _FormTextFieldState extends State<FormTextField> {
             ), // Fokus + error
           ),
         ),
+        maxLines: widget.maxLines,
       ),
     );
   }

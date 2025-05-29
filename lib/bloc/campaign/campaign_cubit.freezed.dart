@@ -263,12 +263,12 @@ $CampaignDetailLoadedCopyWith<CampaignDetailLoaded> get copyWith => _$CampaignDe
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CampaignDetailLoaded&&const DeepCollectionEquality().equals(other.apiResponse, apiResponse));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CampaignDetailLoaded&&(identical(other.apiResponse, apiResponse) || other.apiResponse == apiResponse));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(apiResponse));
+int get hashCode => Object.hash(runtimeType,apiResponse);
 
 @override
 String toString() {
@@ -300,9 +300,9 @@ class _$CampaignDetailLoadedCopyWithImpl<$Res>
 
 /// Create a copy of CampaignState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') $Res call({Object? apiResponse = freezed,}) {
+@pragma('vm:prefer-inline') $Res call({Object? apiResponse = null,}) {
   return _then(CampaignDetailLoaded(
-freezed == apiResponse ? _self.apiResponse : apiResponse // ignore: cast_nullable_to_non_nullable
+null == apiResponse ? _self.apiResponse : apiResponse // ignore: cast_nullable_to_non_nullable
 as ApiResponse,
   ));
 }

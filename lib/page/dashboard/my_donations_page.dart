@@ -1,10 +1,10 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_donation/bloc/donation/donation_cubit.dart';
 import 'package:flutter_donation/core/util/currency_helper.dart';
 import 'package:flutter_donation/core/widget/custom_app_bar.dart';
 import 'package:flutter_donation/resource/model/donation_model.dart';
+import 'package:go_router/go_router.dart';
 
 class MyDonationsPage extends StatefulWidget {
   const MyDonationsPage({super.key});
@@ -51,74 +51,86 @@ class _MyDonationsPageState extends State<MyDonationsPage> {
   }
 
   Widget _buildDonationCard(DonationModel donation) {
+    Color getStatusColor(String? status) {
+      switch (status?.toLowerCase()) {
+        case 'expired':
+          return Colors.red;
+        case 'pending':
+          return Colors.orange;
+        case 'success':
+          return Colors.green;
+        default:
+          return Colors.grey;
+      }
+    }
+
     return Card(
+      color: Colors.white,
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(
-            width: 120,
-            height: 120,
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(10),
-                child: CachedNetworkImage(
-                  imageUrl: donation.campaign?.image ?? '',
-                  placeholder:
-                      (context, url) =>
-                          Center(child: CircularProgressIndicator()),
-                  errorWidget: (context, url, error) => Icon(Icons.error),
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
-          ),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8),
-              child: Column(
-                spacing: 8.0,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: Text(
                     '${donation.campaign?.title}',
                     maxLines: 3,
                     overflow: TextOverflow.ellipsis,
-                    style: TextStyle(fontWeight: FontWeight.bold),
+
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                   ),
-                  Text(
-                    '${donation.createdAt}',
-                    style: TextStyle(color: Colors.blueGrey),
+                ),
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 5,
                   ),
-                  Text(
-                    CurrencyHelper.formatRupiah(
-                      donation.amount?.toDouble() ?? 0,
-                    ),
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.blue,
-                    ),
+                  decoration: BoxDecoration(
+                    color: getStatusColor(donation.status),
+                    borderRadius: BorderRadius.circular(10),
                   ),
-                ],
+                  child: Text(
+                    '${donation.status}',
+                    style: const TextStyle(color: Colors.white),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  CurrencyHelper.formatRupiah(donation.amount?.toDouble() ?? 0),
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.blue,
+                    fontSize: 16,
+                  ),
+                ),
+                Text(
+                  '${donation.createdAt}',
+                  style: TextStyle(color: Colors.blueGrey),
+                ),
+              ],
+            ),
+            if (donation.status?.toLowerCase() == 'pending')
+              SizedBox(
+                width: double.infinity,
+                child: FilledButton(
+                  onPressed:
+                      () => context.push('/payment/${donation.snapToken}'),
+                  child: Text('Bayar Sekarang'),
+                ),
               ),
-            ),
-          ),
-          Container(
-            margin: const EdgeInsets.all(10),
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-            decoration: BoxDecoration(
-              color: Colors.blue,
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Text(
-              '${donation.status}',
-              style: TextStyle(color: Colors.white),
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

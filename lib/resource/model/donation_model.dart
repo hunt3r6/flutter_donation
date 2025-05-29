@@ -9,7 +9,7 @@ class DonationModel {
   final int? campaignId;
   final int? donaturId;
   final int? amount;
-  final dynamic pray;
+  final String? pray;
   final String? snapToken;
   final String? status;
   final String? createdAt;

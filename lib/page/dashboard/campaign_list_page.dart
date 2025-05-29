@@ -69,7 +69,7 @@ class _CampaignListPageState extends State<CampaignListPage> {
               child: ClipRRect(
                 borderRadius: const BorderRadius.all(Radius.circular(10.0)),
                 child: CachedNetworkImage(
-                  imageUrl: campaign.image,
+                  imageUrl: campaign.image ?? '',
                   placeholder:
                       (context, url) =>
                           Center(child: CircularProgressIndicator()),
@@ -87,19 +87,19 @@ class _CampaignListPageState extends State<CampaignListPage> {
                 spacing: 8,
                 children: [
                   Text(
-                    campaign.title,
+                    campaign.title ?? '',
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
 
                   FundProgressBar(
                     collectedAmount: double.parse(
-                      campaign.sumDonation[0].total,
+                      campaign.sumDonation?[0].total ?? '0',
                     ),
-                    maxAmount: campaign.targetDonation.toDouble(),
+                    maxAmount: campaign.targetDonation?.toDouble() ?? 0.0,
                   ),
                   Text(
                     CurrencyHelper.formatRupiah(
-                      double.parse(campaign.sumDonation[0].total),
+                      double.parse(campaign.sumDonation?[0].total ?? '0'),
                     ),
                     style: TextStyle(
                       fontSize: 16,

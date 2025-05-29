@@ -234,7 +234,7 @@ class _HomePageState extends State<HomePage> {
               child: CachedNetworkImage(
                 height: 180,
                 width: double.infinity,
-                imageUrl: campaign.image,
+                imageUrl: campaign.image ?? '',
                 placeholder:
                     (context, url) =>
                         Center(child: CircularProgressIndicator()),
@@ -245,7 +245,7 @@ class _HomePageState extends State<HomePage> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Text(
-                campaign.title,
+                campaign.title ?? '',
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
             ),
@@ -254,7 +254,7 @@ class _HomePageState extends State<HomePage> {
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: Text(
                 CurrencyHelper.formatRupiah(
-                  double.parse(campaign.sumDonation[0].total),
+                  double.parse(campaign.sumDonation?[0].total ?? '0'),
                 ),
                 style: TextStyle(
                   fontSize: 16,
@@ -266,14 +266,16 @@ class _HomePageState extends State<HomePage> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: Text(
-                'Terkumpul dari ${CurrencyHelper.formatRupiah(campaign.targetDonation.toDouble())}',
+                'Terkumpul dari ${CurrencyHelper.formatRupiah(campaign.targetDonation?.toDouble() ?? 0.0)}',
               ),
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: FundProgressBar(
-                collectedAmount: double.parse(campaign.sumDonation[0].total),
-                maxAmount: campaign.targetDonation.toDouble(),
+                collectedAmount: double.parse(
+                  campaign.sumDonation?[0].total ?? '',
+                ),
+                maxAmount: campaign.targetDonation?.toDouble() ?? 0.0,
               ),
             ),
             Padding(
@@ -281,10 +283,10 @@ class _HomePageState extends State<HomePage> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  _textIcon(CupertinoIcons.person, campaign.user.name ?? ''),
+                  _textIcon(CupertinoIcons.person, campaign.user?.name ?? ''),
                   _textIcon(
                     CupertinoIcons.time,
-                    '${DateUtilsHelper.daysUntil(campaign.maxDate)} Hari Lagi',
+                    '${DateUtilsHelper.daysUntil(campaign.maxDate ?? DateTime.now())} Hari Lagi',
                   ),
                 ],
               ),

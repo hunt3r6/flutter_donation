@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_donation/bloc/auth/auth_bloc.dart';
 import 'package:flutter_donation/bloc/campaign/campaign_cubit.dart';
+import 'package:flutter_donation/bloc/donate/donate_cubit.dart';
 import 'package:flutter_donation/bloc/donation/donation_cubit.dart';
 import 'package:flutter_donation/bloc/profile/profile_cubit.dart';
 import 'package:flutter_donation/core/animation/custom_fade_page.dart';
@@ -11,7 +12,9 @@ import 'package:flutter_donation/page/dashboard/dashboard_page.dart';
 import 'package:flutter_donation/page/dashboard/campaign_list_page.dart';
 import 'package:flutter_donation/page/dashboard/home_page.dart';
 import 'package:flutter_donation/page/dashboard/my_donations_page.dart';
+import 'package:flutter_donation/page/donate/donate_page.dart';
 import 'package:flutter_donation/page/login/login_page.dart';
+import 'package:flutter_donation/page/payment/midtrans_payment_page.dart';
 import 'package:flutter_donation/page/profile/update_password_page.dart';
 import 'package:flutter_donation/page/profile/update_profile_page.dart';
 import 'package:flutter_donation/page/register/register_page.dart';
@@ -142,6 +145,31 @@ class AppRouter {
                       CampaignCubit(homeRemoteResource)
                         ..getDetailCampaign(state.pathParameters['slug'] ?? ''),
               child: DetailCampaignPage(),
+            ),
+            key: state.pageKey,
+          );
+        },
+      ),
+      GoRoute(
+        path: '/donate/:slug',
+        pageBuilder: (context, state) {
+          return CustomFadePage(
+            child: BlocProvider(
+              create: (context) => DonateCubit(donationRemoteResource),
+              child: DonatePage(
+                slugCampaign: state.pathParameters['slug'] ?? '',
+              ),
+            ),
+            key: state.pageKey,
+          );
+        },
+      ),
+      GoRoute(
+        path: '/payment/:snapToken',
+        pageBuilder: (context, state) {
+          return CustomFadePage(
+            child: MidtransPaymentPage(
+              snapToken: state.pathParameters['snapToken'] ?? '',
             ),
             key: state.pageKey,
           );
