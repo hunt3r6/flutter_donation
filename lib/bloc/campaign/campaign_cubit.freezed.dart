@@ -244,4 +244,70 @@ as String,
 
 }
 
+/// @nodoc
+
+
+class CampaignDetailLoaded implements CampaignState {
+  const CampaignDetailLoaded(this.apiResponse);
+  
+
+ final  ApiResponse apiResponse;
+
+/// Create a copy of CampaignState
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$CampaignDetailLoadedCopyWith<CampaignDetailLoaded> get copyWith => _$CampaignDetailLoadedCopyWithImpl<CampaignDetailLoaded>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CampaignDetailLoaded&&const DeepCollectionEquality().equals(other.apiResponse, apiResponse));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(apiResponse));
+
+@override
+String toString() {
+  return 'CampaignState.detailLoaded(apiResponse: $apiResponse)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $CampaignDetailLoadedCopyWith<$Res> implements $CampaignStateCopyWith<$Res> {
+  factory $CampaignDetailLoadedCopyWith(CampaignDetailLoaded value, $Res Function(CampaignDetailLoaded) _then) = _$CampaignDetailLoadedCopyWithImpl;
+@useResult
+$Res call({
+ ApiResponse apiResponse
+});
+
+
+
+
+}
+/// @nodoc
+class _$CampaignDetailLoadedCopyWithImpl<$Res>
+    implements $CampaignDetailLoadedCopyWith<$Res> {
+  _$CampaignDetailLoadedCopyWithImpl(this._self, this._then);
+
+  final CampaignDetailLoaded _self;
+  final $Res Function(CampaignDetailLoaded) _then;
+
+/// Create a copy of CampaignState
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? apiResponse = freezed,}) {
+  return _then(CampaignDetailLoaded(
+freezed == apiResponse ? _self.apiResponse : apiResponse // ignore: cast_nullable_to_non_nullable
+as ApiResponse,
+  ));
+}
+
+
+}
+
 // dart format on

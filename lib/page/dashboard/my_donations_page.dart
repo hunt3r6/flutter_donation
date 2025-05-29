@@ -65,7 +65,7 @@ class _MyDonationsPageState extends State<MyDonationsPage> {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(10),
                 child: CachedNetworkImage(
-                  imageUrl: donation.campaign.image,
+                  imageUrl: donation.campaign?.image ?? '',
                   placeholder:
                       (context, url) =>
                           Center(child: CircularProgressIndicator()),
@@ -84,17 +84,19 @@ class _MyDonationsPageState extends State<MyDonationsPage> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    donation.campaign.title,
+                    '${donation.campaign?.title}',
                     maxLines: 3,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                   Text(
-                    donation.createdAt,
+                    '${donation.createdAt}',
                     style: TextStyle(color: Colors.blueGrey),
                   ),
                   Text(
-                    CurrencyHelper.formatRupiah(donation.amount.toDouble()),
+                    CurrencyHelper.formatRupiah(
+                      donation.amount?.toDouble() ?? 0,
+                    ),
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       color: Colors.blue,
@@ -111,7 +113,10 @@ class _MyDonationsPageState extends State<MyDonationsPage> {
               color: Colors.blue,
               borderRadius: BorderRadius.circular(10),
             ),
-            child: Text(donation.status, style: TextStyle(color: Colors.white)),
+            child: Text(
+              '${donation.status}',
+              style: TextStyle(color: Colors.white),
+            ),
           ),
         ],
       ),

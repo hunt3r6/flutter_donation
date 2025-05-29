@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_donation/bloc/auth/auth_bloc.dart';
+import 'package:flutter_donation/bloc/campaign/campaign_cubit.dart';
 import 'package:flutter_donation/bloc/donation/donation_cubit.dart';
 import 'package:flutter_donation/bloc/profile/profile_cubit.dart';
 import 'package:flutter_donation/core/animation/custom_fade_page.dart';
+import 'package:flutter_donation/page/campaign/detail_campaign_page.dart';
 import 'package:flutter_donation/page/dashboard/account_page.dart';
 import 'package:flutter_donation/page/dashboard/dashboard_page.dart';
 import 'package:flutter_donation/page/dashboard/campaign_list_page.dart';
@@ -14,6 +16,7 @@ import 'package:flutter_donation/page/profile/update_password_page.dart';
 import 'package:flutter_donation/page/profile/update_profile_page.dart';
 import 'package:flutter_donation/page/register/register_page.dart';
 import 'package:flutter_donation/resource/remote/donation_remote_resource.dart';
+import 'package:flutter_donation/resource/remote/home_remote_resource.dart';
 import 'package:flutter_donation/resource/remote/profile_remote_resource.dart';
 import 'package:go_router/go_router.dart';
 
@@ -21,11 +24,13 @@ class AppRouter {
   final AuthBloc authBloc;
   final ProfileRemoteResource profileRemoteResource;
   final DonationRemoteResource donationRemoteResource;
+  final HomeRemoteResource homeRemoteResource;
 
   AppRouter({
     required this.authBloc,
     required this.profileRemoteResource,
     required this.donationRemoteResource,
+    required this.homeRemoteResource,
   });
 
   late final GoRouter router = GoRouter(
@@ -122,6 +127,21 @@ class AppRouter {
             child: BlocProvider(
               create: (context) => ProfileCubit(profileRemoteResource),
               child: UpdatePasswordPage(),
+            ),
+            key: state.pageKey,
+          );
+        },
+      ),
+      GoRoute(
+        path: '/detail_campaign/:slug',
+        pageBuilder: (context, state) {
+          return CustomFadePage(
+            child: BlocProvider(
+              create:
+                  (context) =>
+                      CampaignCubit(homeRemoteResource)
+                        ..getDetailCampaign(state.pathParameters['slug'] ?? ''),
+              child: DetailCampaignPage(),
             ),
             key: state.pageKey,
           );

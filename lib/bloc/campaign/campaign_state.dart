@@ -7,4 +7,6 @@ class CampaignState with _$CampaignState {
   const factory CampaignState.loaded(List<CampaignModel> campaigns) =
       CampaignLoaded;
   const factory CampaignState.error(String message) = CampaignError;
+  const factory CampaignState.detailLoaded(ApiResponse apiResponse) =
+      CampaignDetailLoaded;
 }

@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_donation/resource/model/api_response.dart';
 import 'package:flutter_donation/resource/model/campaign_model.dart';
 import 'package:flutter_donation/resource/remote/home_remote_resource.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -27,6 +28,15 @@ class CampaignCubit extends Cubit<CampaignState> {
     result.fold(
       (error) => emit(CampaignState.error(error)),
       (campaigns) => emit(CampaignState.loaded(campaigns)),
+    );
+  }
+
+  getDetailCampaign(String slug) async {
+    emit(CampaignState.loading());
+    final result = await homeRemoteResource.getDetailCampaign(slug);
+    result.fold(
+      (error) => emit(CampaignState.error(error)),
+      (campaign) => emit(CampaignState.detailLoaded(campaign)),
     );
   }
 }

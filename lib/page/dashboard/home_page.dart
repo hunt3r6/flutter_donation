@@ -217,19 +217,23 @@ class _HomePageState extends State<HomePage> {
       elevation: 0.2,
       color: Colors.white,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-      child: Column(
-        spacing: 8,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          ClipRRect(
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(10),
-              topRight: Radius.circular(10),
-            ),
-            child: SizedBox(
-              height: 180,
-              width: double.infinity,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(15.0),
+        onTap: () {
+          context.push('/detail_campaign/${campaign.slug}');
+        },
+        child: Column(
+          spacing: 8,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(10),
+                topRight: Radius.circular(10),
+              ),
               child: CachedNetworkImage(
+                height: 180,
+                width: double.infinity,
                 imageUrl: campaign.image,
                 placeholder:
                     (context, url) =>
@@ -238,56 +242,56 @@ class _HomePageState extends State<HomePage> {
                 fit: BoxFit.cover,
               ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Text(
-              campaign.title,
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-            ),
-          ),
-          SizedBox(height: 2),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: Text(
-              CurrencyHelper.formatRupiah(
-                double.parse(campaign.sumDonation[0].total),
-              ),
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: Colors.blue,
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Text(
+                campaign.title,
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: Text(
-              'Terkumpul dari ${CurrencyHelper.formatRupiah(campaign.targetDonation.toDouble())}',
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: FundProgressBar(
-              collectedAmount: double.parse(campaign.sumDonation[0].total),
-              maxAmount: campaign.targetDonation.toDouble(),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                _textIcon(CupertinoIcons.person, campaign.user.name),
-                _textIcon(
-                  CupertinoIcons.time,
-                  '${DateUtilsHelper.daysUntil(campaign.maxDate)} Hari Lagi',
+            SizedBox(height: 2),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Text(
+                CurrencyHelper.formatRupiah(
+                  double.parse(campaign.sumDonation[0].total),
                 ),
-              ],
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.blue,
+                ),
+              ),
             ),
-          ),
-          SizedBox(height: 8),
-        ],
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Text(
+                'Terkumpul dari ${CurrencyHelper.formatRupiah(campaign.targetDonation.toDouble())}',
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: FundProgressBar(
+                collectedAmount: double.parse(campaign.sumDonation[0].total),
+                maxAmount: campaign.targetDonation.toDouble(),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  _textIcon(CupertinoIcons.person, campaign.user.name ?? ''),
+                  _textIcon(
+                    CupertinoIcons.time,
+                    '${DateUtilsHelper.daysUntil(campaign.maxDate)} Hari Lagi',
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(height: 8),
+          ],
+        ),
       ),
     );
   }

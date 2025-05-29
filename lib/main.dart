@@ -39,6 +39,7 @@ void main() async {
     authBloc: authBloc,
     donationRemoteResource: donationRemoteResource,
     profileRemoteResource: profilRemoteResource,
+    homeRemoteResource: homeRemoteResource,
   );
 
   //Add the interceptor to the Dio instance
