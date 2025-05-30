@@ -7,14 +7,14 @@ class DonationRemoteResource {
   final Dio dio;
 
   DonationRemoteResource(this.dio);
-  Future<Either<String, List<DonationModel>>> fecthDonations() async {
+  Future<Either<String, PagingModel>> fecthDonations({int page = 1}) async {
     try {
-      final response = await dio.get('donation');
-      final pagingModel = PagingModel.fromMap(
+      final response = await dio.get('donation?page=$page');
+      final result = PagingModel.fromMap(
         response.data['data'],
         DonationModel.fromMap,
       );
-      return Right(pagingModel.data ?? []);
+      return Right(result);
     } on DioException catch (e) {
       return Left(e.toString());
     }

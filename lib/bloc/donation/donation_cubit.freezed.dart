@@ -110,7 +110,7 @@ String toString() {
 
 
 class DonationLoaded implements DonationState {
-  const DonationLoaded(final  List<DonationModel> donations): _donations = donations;
+  const DonationLoaded(final  List<DonationModel> donations, {required this.hasMore}): _donations = donations;
   
 
  final  List<DonationModel> _donations;
@@ -120,6 +120,7 @@ class DonationLoaded implements DonationState {
   return EqualUnmodifiableListView(_donations);
 }
 
+ final  bool hasMore;
 
 /// Create a copy of DonationState
 /// with the given fields replaced by the non-null parameter values.
@@ -131,16 +132,16 @@ $DonationLoadedCopyWith<DonationLoaded> get copyWith => _$DonationLoadedCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is DonationLoaded&&const DeepCollectionEquality().equals(other._donations, _donations));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is DonationLoaded&&const DeepCollectionEquality().equals(other._donations, _donations)&&(identical(other.hasMore, hasMore) || other.hasMore == hasMore));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_donations));
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_donations),hasMore);
 
 @override
 String toString() {
-  return 'DonationState.loaded(donations: $donations)';
+  return 'DonationState.loaded(donations: $donations, hasMore: $hasMore)';
 }
 
 
@@ -151,7 +152,7 @@ abstract mixin class $DonationLoadedCopyWith<$Res> implements $DonationStateCopy
   factory $DonationLoadedCopyWith(DonationLoaded value, $Res Function(DonationLoaded) _then) = _$DonationLoadedCopyWithImpl;
 @useResult
 $Res call({
- List<DonationModel> donations
+ List<DonationModel> donations, bool hasMore
 });
 
 
@@ -168,10 +169,11 @@ class _$DonationLoadedCopyWithImpl<$Res>
 
 /// Create a copy of DonationState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') $Res call({Object? donations = null,}) {
+@pragma('vm:prefer-inline') $Res call({Object? donations = null,Object? hasMore = null,}) {
   return _then(DonationLoaded(
 null == donations ? _self._donations : donations // ignore: cast_nullable_to_non_nullable
-as List<DonationModel>,
+as List<DonationModel>,hasMore: null == hasMore ? _self.hasMore : hasMore // ignore: cast_nullable_to_non_nullable
+as bool,
   ));
 }
 

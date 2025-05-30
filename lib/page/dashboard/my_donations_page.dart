@@ -14,14 +14,25 @@ class MyDonationsPage extends StatefulWidget {
 }
 
 class _MyDonationsPageState extends State<MyDonationsPage> {
+  final ScrollController _scrollController = ScrollController();
+
   @override
   void initState() {
     getMyDonations();
+    _scrollController.addListener(_onScroll);
+
     super.initState();
   }
 
   void getMyDonations() {
     context.read<DonationCubit>().fetchDonations();
+  }
+
+  void _onScroll() {
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent - 200) {
+      context.read<DonationCubit>().fetchDonations();
+    }
   }
 
   @override
@@ -36,8 +47,12 @@ class _MyDonationsPageState extends State<MyDonationsPage> {
             return Center(child: Text(state.message));
           } else if (state is DonationLoaded) {
             return ListView.builder(
-              itemCount: state.donations.length,
+              controller: _scrollController,
+              itemCount: state.donations.length + (state.hasMore ? 1 : 0),
               itemBuilder: (context, index) {
+                if (index == state.donations.length) {
+                  return Center(child: CircularProgressIndicator());
+                }
                 final donations = state.donations[index];
                 return _buildDonationCard(donations);
               },
