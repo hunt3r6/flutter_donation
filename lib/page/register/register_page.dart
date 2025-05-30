@@ -5,6 +5,7 @@ import 'package:flutter_donation/bloc/auth/auth_bloc.dart';
 import 'package:flutter_donation/core/util/error_handler.dart';
 import 'package:flutter_donation/core/widget/action_button.dart';
 import 'package:flutter_donation/core/widget/auth_text_field.dart';
+import 'package:flutter_donation/core/widget/custom_app_bar.dart';
 import 'package:flutter_donation/core/widget/form_text_field.dart';
 import 'package:go_router/go_router.dart';
 import 'package:toastification/toastification.dart';
@@ -46,10 +47,7 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Color(0xFFF9F5F6),
-        elevation: 0,
-        surfaceTintColor: Colors.white,
+      appBar: CustomAppBar(
         leading: IconButton(
           onPressed: () {
             context.pop();

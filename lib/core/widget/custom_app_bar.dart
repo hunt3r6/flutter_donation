@@ -7,7 +7,7 @@ class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
   final Widget? leading;
   const CustomAppBar({
     super.key,
-    required this.title,
+    this.title = '',
     this.centerTitle = true,
     this.actions,
     this.leading,

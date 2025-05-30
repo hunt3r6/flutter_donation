@@ -28,6 +28,7 @@ class _DetailCampaignPageState extends State<DetailCampaignPage> {
     return Scaffold(
       appBar: CustomAppBar(
         title: 'Detail Campaign',
+        centerTitle: false,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios),
           onPressed: () => context.pop(),

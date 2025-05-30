@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_donation/bloc/auth/auth_bloc.dart';
 import 'package:flutter_donation/core/widget/action_button.dart';
 import 'package:flutter_donation/core/widget/auth_text_field.dart';
+import 'package:flutter_donation/core/widget/custom_app_bar.dart';
 import 'package:go_router/go_router.dart';
 import 'package:toastification/toastification.dart';
 
@@ -59,15 +60,10 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Color(0xFFF9F5F6),
-        elevation: 0,
-        surfaceTintColor: Colors.white,
+      appBar: CustomAppBar(
         leading: IconButton(
-          onPressed: () {
-            context.go('/dashboard/home');
-          },
           icon: Icon(Icons.arrow_back_ios_new),
+          onPressed: () => context.go('/dashboard/home'),
         ),
       ),
       body: BlocListener<AuthBloc, AuthState>(
@@ -75,7 +71,6 @@ class _LoginPageState extends State<LoginPage> {
           switch (state) {
             case Loading():
               break;
-
             case Authenticated():
               _showToast(
                 context: context,

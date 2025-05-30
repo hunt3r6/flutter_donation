@@ -39,7 +39,7 @@ class _HomePageState extends State<HomePage> {
     super.initState();
   }
 
-  void getUser() async {
+  Future<void> getUser() async {
     final user = await UserLocalResource.getUser();
     setState(() {
       image = user?.avatar;
