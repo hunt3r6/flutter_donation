@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_donation/core/constants/app_config.dart';
+import 'package:flutter_donation/core/widget/custom_app_bar.dart';
 import 'package:go_router/go_router.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
@@ -46,15 +47,14 @@ class _MidtransPaymentPageState extends State<MidtransPaymentPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.primary,
+      appBar: CustomAppBar(
+        title: 'Midtrans Payment',
         leading: IconButton(
           onPressed: () {
             context.pop();
           },
-          icon: const Icon(Icons.arrow_back_ios_new, color: Colors.white),
+          icon: const Icon(Icons.arrow_back_ios_new),
         ),
-        title: Text('Midtrans Payment', style: TextStyle(color: Colors.white)),
       ),
       body: WebViewWidget(controller: _webViewController),
     );
