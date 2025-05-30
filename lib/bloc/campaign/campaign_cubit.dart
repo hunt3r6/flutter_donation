@@ -39,4 +39,13 @@ class CampaignCubit extends Cubit<CampaignState> {
       (campaign) => emit(CampaignState.detailLoaded(campaign)),
     );
   }
+
+  searchCampaigns(String query) async {
+    emit(CampaignState.loading());
+    final result = await homeRemoteResource.getCampaigns(query: query);
+    result.fold(
+      (error) => emit(CampaignState.error(error)),
+      (campaigns) => emit(CampaignState.loaded(campaigns)),
+    );
+  }
 }

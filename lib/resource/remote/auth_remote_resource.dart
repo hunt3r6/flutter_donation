@@ -3,7 +3,9 @@ import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:either_dart/either.dart';
 import 'package:flutter_donation/resource/local/auth_local_resource.dart';
+import 'package:flutter_donation/resource/local/user_local_resource.dart';
 import 'package:flutter_donation/resource/model/auth_response_model.dart';
+import 'package:flutter_donation/resource/model/user_model.dart';
 
 class AuthRemoteResource {
   final Dio _dio;
@@ -20,7 +22,9 @@ class AuthRemoteResource {
         data: {'email': email, 'password': password},
       );
       String token = response.data['token'];
+      final UserModel user = UserModel.fromMap(response.data['data']);
       await AuthLocalResource.saveToken(token);
+      await UserLocalResource.saveUser(user);
       return Right(AuthResponseModel.fromMap(response.data));
     } on DioException catch (e) {
       if (e.response?.statusCode == 401) {

@@ -18,6 +18,7 @@ import 'package:flutter_donation/page/payment/midtrans_payment_page.dart';
 import 'package:flutter_donation/page/profile/update_password_page.dart';
 import 'package:flutter_donation/page/profile/update_profile_page.dart';
 import 'package:flutter_donation/page/register/register_page.dart';
+import 'package:flutter_donation/page/search/search_page.dart';
 import 'package:flutter_donation/resource/remote/donation_remote_resource.dart';
 import 'package:flutter_donation/resource/remote/home_remote_resource.dart';
 import 'package:flutter_donation/resource/remote/profile_remote_resource.dart';
@@ -59,7 +60,7 @@ class AppRouter {
     },
     routes: [
       ShellRoute(
-        builder: (_, __, child) => DashboardPage(child: child),
+        builder: (_, _, child) => DashboardPage(child: child),
         routes: [
           GoRoute(
             path: '/dashboard/home',
@@ -170,6 +171,21 @@ class AppRouter {
           return CustomFadePage(
             child: MidtransPaymentPage(
               snapToken: state.pathParameters['snapToken'] ?? '',
+            ),
+            key: state.pageKey,
+          );
+        },
+      ),
+      GoRoute(
+        path: '/search/:query',
+        pageBuilder: (context, state) {
+          return CustomFadePage(
+            child: BlocProvider(
+              create:
+                  (context) =>
+                      CampaignCubit(homeRemoteResource)
+                        ..searchCampaigns(state.pathParameters['query'] ?? ''),
+              child: SearchPage(),
             ),
             key: state.pageKey,
           );

@@ -56,7 +56,7 @@ class HomeRemoteResource {
     int page = 1,
   }) async {
     try {
-      final response = await _dio.get('campaign?query=$query&page=$page');
+      final response = await _dio.get('campaign?q=$query&page=$page');
       final result = PagingModel.fromMap(
         response.data['data'],
         CampaignModel.fromMap,

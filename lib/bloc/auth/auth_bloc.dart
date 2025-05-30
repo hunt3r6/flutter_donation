@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_donation/resource/local/auth_local_resource.dart';
+import 'package:flutter_donation/resource/local/user_local_resource.dart';
 import 'package:flutter_donation/resource/remote/auth_remote_resource.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -80,6 +81,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   ) async {
     emit(AuthState.loading());
     await AuthLocalResource.deleteToken();
+    await UserLocalResource.deleteUser();
     emit(AuthState.unauthenticated());
   }
 }

@@ -5,12 +5,12 @@ class UserLocalResource {
   static const FlutterSecureStorage _storage = FlutterSecureStorage();
 
   /// Simpan User ke storage
-  static Future<void> saveToken(UserModel user) async {
+  static Future<void> saveUser(UserModel user) async {
     await _storage.write(key: "user", value: user.toJson());
   }
 
   /// Ambil User dari storage
-  static Future<UserModel?> getToken() async {
+  static Future<UserModel?> getUser() async {
     final user = await _storage.read(key: "user");
     return user != null ? UserModel.fromJson(user) : null;
   }

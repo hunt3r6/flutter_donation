@@ -4,21 +4,21 @@ import 'package:flutter/material.dart';
 class SearchTextField extends StatelessWidget {
   final String hintText;
   final TextEditingController? controller;
-  final ValueChanged<String>? onFieldSubmitted;
+  final ValueChanged<String>? onSubmitted;
   const SearchTextField({
     super.key,
     this.hintText = 'Cari...',
     this.controller,
-    this.onFieldSubmitted,
+    this.onSubmitted,
   });
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(16.0),
-      child: TextFormField(
+      child: TextField(
         controller: controller,
-        onFieldSubmitted: onFieldSubmitted,
+        onSubmitted: onSubmitted,
         decoration: InputDecoration(
           hintText: hintText,
           prefixIcon: const Icon(CupertinoIcons.search),

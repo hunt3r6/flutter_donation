@@ -11,6 +11,7 @@ import 'package:flutter_donation/core/util/currency_helper.dart';
 import 'package:flutter_donation/core/util/date_utils_helper.dart';
 import 'package:flutter_donation/core/widget/fund_progress_bar.dart';
 import 'package:flutter_donation/core/widget/search_text_field.dart';
+import 'package:flutter_donation/resource/local/user_local_resource.dart';
 import 'package:flutter_donation/resource/model/campaign_model.dart';
 import 'package:flutter_donation/resource/model/category_model.dart';
 import 'package:flutter_donation/resource/model/slider_model.dart';
@@ -26,6 +27,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   String? selectedCategory;
   TextEditingController searchController = TextEditingController();
+  String? image = "";
 
   @override
   void initState() {
@@ -33,7 +35,15 @@ class _HomePageState extends State<HomePage> {
     context.read<SlidersCubit>().getSliders();
     context.read<CategoryCubit>().getCategories();
     _filterByCategory('Semua');
+    getUser();
     super.initState();
+  }
+
+  void getUser() async {
+    final user = await UserLocalResource.getUser();
+    setState(() {
+      image = user?.avatar;
+    });
   }
 
   void _filterByCategory(String slug) {
@@ -64,7 +74,10 @@ class _HomePageState extends State<HomePage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       spacing: 12,
                       children: [
-                        CircleAvatar(radius: 30),
+                        CircleAvatar(
+                          radius: 30,
+                          backgroundImage: NetworkImage(image ?? ''),
+                        ),
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -87,7 +100,6 @@ class _HomePageState extends State<HomePage> {
                               context.read<AuthBloc>().add(
                                 AuthEvent.logoutRequested(),
                               );
-                              context.push('/login');
                             } else {
                               context.push('/login');
                             }
@@ -104,9 +116,9 @@ class _HomePageState extends State<HomePage> {
                   SearchTextField(
                     controller: searchController,
                     hintText: 'Cari yang ingin kamu bantu',
-                    onFieldSubmitted: (value) {
+                    onSubmitted: (value) {
                       if (value.isNotEmpty) {
-                        context.push('/search?query=$value').then((value) {
+                        context.push('/search/$value').then((value) {
                           searchController.clear();
                         });
                       }
@@ -148,7 +160,6 @@ class _HomePageState extends State<HomePage> {
                   );
                 } else if (state is CategoryLoaded) {
                   List<CategoryModel> categories = state.categories;
-
                   return SizedBox(
                     height: 45,
                     child: ListView.builder(
@@ -360,4 +371,6 @@ class _HomePageState extends State<HomePage> {
       ],
     );
   }
+
+  void searchCampaigns(String query) {}
 }
