@@ -74,10 +74,12 @@ class _HomePageState extends State<HomePage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       spacing: 12,
                       children: [
-                        CircleAvatar(
-                          radius: 30,
-                          backgroundImage: NetworkImage(image ?? ''),
-                        ),
+                        isLoggedIn
+                            ? CircleAvatar(
+                              radius: 30,
+                              backgroundImage: NetworkImage(image ?? ''),
+                            )
+                            : const SizedBox.shrink(),
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
