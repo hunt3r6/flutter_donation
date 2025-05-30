@@ -94,21 +94,30 @@ class _HomePageState extends State<HomePage> {
                             ],
                           ),
                         ),
-                        IconButton(
-                          onPressed: () {
-                            if (isLoggedIn) {
-                              context.read<AuthBloc>().add(
-                                AuthEvent.logoutRequested(),
-                              );
-                            } else {
+                        BlocConsumer<AuthBloc, AuthState>(
+                          listener: (context, state) {
+                            if (state is Unauthenticated) {
                               context.push('/login');
                             }
                           },
-                          icon: Icon(
-                            isLoggedIn
-                                ? Icons.logout_rounded
-                                : Icons.login_rounded,
-                          ),
+                          builder: (context, state) {
+                            return IconButton(
+                              onPressed: () {
+                                if (isLoggedIn) {
+                                  context.read<AuthBloc>().add(
+                                    AuthEvent.logoutRequested(),
+                                  );
+                                } else {
+                                  context.push('/login');
+                                }
+                              },
+                              icon: Icon(
+                                isLoggedIn
+                                    ? Icons.logout_rounded
+                                    : Icons.login_rounded,
+                              ),
+                            );
+                          },
                         ),
                       ],
                     ),
@@ -371,6 +380,4 @@ class _HomePageState extends State<HomePage> {
       ],
     );
   }
-
-  void searchCampaigns(String query) {}
 }
