@@ -3,6 +3,7 @@ import 'package:either_dart/either.dart';
 import 'package:flutter_donation/resource/model/api_response.dart';
 import 'package:flutter_donation/resource/model/campaign_model.dart';
 import 'package:flutter_donation/resource/model/category_model.dart';
+import 'package:flutter_donation/resource/model/paging_model.dart';
 import 'package:flutter_donation/resource/model/slider_model.dart';
 
 class HomeRemoteResource {
@@ -24,12 +25,11 @@ class HomeRemoteResource {
   Future<Either<String, List<CategoryModel>>> getCategories() async {
     try {
       final response = await _dio.get('category');
-      final categories = response.data['data']['data'];
-      return Right(
-        (categories as List)
-            .map((category) => CategoryModel.fromMap(category))
-            .toList(),
+      final result = PagingModel.fromMap(
+        response.data['data'],
+        CategoryModel.fromMap,
       );
+      return Right(result.data ?? []);
     } on DioException catch (e) {
       return Left(e.toString());
     }
@@ -51,13 +51,17 @@ class HomeRemoteResource {
     }
   }
 
-  Future<Either<String, List<CampaignModel>>> getCampaigns() async {
+  Future<Either<String, List<CampaignModel>>> getCampaigns({
+    String query = '',
+    int page = 1,
+  }) async {
     try {
-      final response = await _dio.get('campaign');
-      final campaigns = response.data['data']['data'];
-      return Right(
-        (campaigns as List).map((e) => CampaignModel.fromMap(e)).toList(),
+      final response = await _dio.get('campaign?query=$query&page=$page');
+      final result = PagingModel.fromMap(
+        response.data['data'],
+        CampaignModel.fromMap,
       );
+      return Right(result.data ?? []);
     } on DioException catch (e) {
       return Left(e.toString());
     }
