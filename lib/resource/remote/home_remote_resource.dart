@@ -51,7 +51,7 @@ class HomeRemoteResource {
     }
   }
 
-  Future<Either<String, List<CampaignModel>>> getCampaigns({
+  Future<Either<String, PagingModel>> getCampaigns({
     String query = '',
     int page = 1,
   }) async {
@@ -61,7 +61,7 @@ class HomeRemoteResource {
         response.data['data'],
         CampaignModel.fromMap,
       );
-      return Right(result.data ?? []);
+      return Right(result);
     } on DioException catch (e) {
       return Left(e.toString());
     }

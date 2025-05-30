@@ -16,14 +16,24 @@ class CampaignListPage extends StatefulWidget {
 }
 
 class _CampaignListPageState extends State<CampaignListPage> {
+  final ScrollController _scrollController = ScrollController();
+
   @override
   void initState() {
     getCampaigns();
+    _scrollController.addListener(_onScroll);
     super.initState();
   }
 
   void getCampaigns() {
     context.read<CampaignCubit>().getCampaigns();
+  }
+
+  void _onScroll() {
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent - 200) {
+      context.read<CampaignCubit>().getCampaigns();
+    }
   }
 
   @override
@@ -40,8 +50,12 @@ class _CampaignListPageState extends State<CampaignListPage> {
             final campaigns = state.campaigns;
             // Display the list of campaigns
             return ListView.builder(
-              itemCount: campaigns.length,
+              controller: _scrollController,
+              itemCount: campaigns.length + (state.hasMore ? 1 : 0),
               itemBuilder: (context, index) {
+                if (index == state.campaigns.length) {
+                  return Center(child: CircularProgressIndicator());
+                }
                 final campaign = campaigns[index];
                 return _buildCardCampaign(campaign);
               },

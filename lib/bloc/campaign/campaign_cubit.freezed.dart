@@ -110,7 +110,7 @@ String toString() {
 
 
 class CampaignLoaded implements CampaignState {
-  const CampaignLoaded(final  List<CampaignModel> campaigns): _campaigns = campaigns;
+  const CampaignLoaded(final  List<CampaignModel> campaigns, {required this.hasMore}): _campaigns = campaigns;
   
 
  final  List<CampaignModel> _campaigns;
@@ -120,6 +120,7 @@ class CampaignLoaded implements CampaignState {
   return EqualUnmodifiableListView(_campaigns);
 }
 
+ final  bool hasMore;
 
 /// Create a copy of CampaignState
 /// with the given fields replaced by the non-null parameter values.
@@ -131,16 +132,16 @@ $CampaignLoadedCopyWith<CampaignLoaded> get copyWith => _$CampaignLoadedCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CampaignLoaded&&const DeepCollectionEquality().equals(other._campaigns, _campaigns));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CampaignLoaded&&const DeepCollectionEquality().equals(other._campaigns, _campaigns)&&(identical(other.hasMore, hasMore) || other.hasMore == hasMore));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_campaigns));
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_campaigns),hasMore);
 
 @override
 String toString() {
-  return 'CampaignState.loaded(campaigns: $campaigns)';
+  return 'CampaignState.loaded(campaigns: $campaigns, hasMore: $hasMore)';
 }
 
 
@@ -151,7 +152,7 @@ abstract mixin class $CampaignLoadedCopyWith<$Res> implements $CampaignStateCopy
   factory $CampaignLoadedCopyWith(CampaignLoaded value, $Res Function(CampaignLoaded) _then) = _$CampaignLoadedCopyWithImpl;
 @useResult
 $Res call({
- List<CampaignModel> campaigns
+ List<CampaignModel> campaigns, bool hasMore
 });
 
 
@@ -168,10 +169,11 @@ class _$CampaignLoadedCopyWithImpl<$Res>
 
 /// Create a copy of CampaignState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') $Res call({Object? campaigns = null,}) {
+@pragma('vm:prefer-inline') $Res call({Object? campaigns = null,Object? hasMore = null,}) {
   return _then(CampaignLoaded(
 null == campaigns ? _self._campaigns : campaigns // ignore: cast_nullable_to_non_nullable
-as List<CampaignModel>,
+as List<CampaignModel>,hasMore: null == hasMore ? _self.hasMore : hasMore // ignore: cast_nullable_to_non_nullable
+as bool,
   ));
 }
 
